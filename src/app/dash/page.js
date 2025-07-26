@@ -16,8 +16,6 @@ export default function SkilloraProfile() {
   const [selectedCategory, setSelectedCategory] = useState("Category");
   const [mounted, setMounted] = useState(false);
 
-  
-
   const profileData = [
     {
       name: "Amal Raj R",
@@ -109,19 +107,22 @@ export default function SkilloraProfile() {
       {/* Main Brand Section */}
 
       <div className="flex justify-center items-center   ">
-        <div className="bg-[url('/dashbg.png')] bg-auto bg-no-repeat bg-center py-16 w-[90%] h-[100%] rounded-2xl mx-auto text-center">
-          <h1 className="text-6xl font-bold text-white">ShowMySkills</h1>
+        <div className="bg-[url('/dashbg.png')] bg-auto bg-no-repeat bg-center sm:py-16 py-8 w-[90%] h-[100%] rounded-2xl mx-auto text-center">
+          <h1 className="sm:text-6xl text-4xl font-bold text-white">
+            ShowMySkills
+          </h1>
         </div>
       </div>
 
       {/* Search and Filter Section */}
-      <div className="w-[90%] mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="relative">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 py-6 md:py-8">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 md:justify-between mb-6 px-8 sm:mx-auto sm:mb-8">
+          {/* Category Select */}
+          <div className="relative w-full sm:w-64">
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="appearance-none bg-white border-2 border-emerald-500 rounded-full px-4 py-2 text-emerald-600 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+              className="appearance-none w-full bg-white border-2 border-emerald-500 rounded-full px-4 py-2 text-emerald-600 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             >
               <option>Category</option>
               <option>Web Development</option>
@@ -146,21 +147,22 @@ export default function SkilloraProfile() {
             </div>
           </div>
 
-          <div className="relative flex-1 max-w-md ml-4 rounded-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 " />
+          {/* Search Input */}
+          <div className="relative w-full sm:flex-1 sm:max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
               placeholder="Search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 shadow-inner text-gray-800 shadow-black/30 rounded-full placeholder:text-gray-400 border-0 bg-[#FFF8F0] focus:outline-none focus:ring-2 focus:ring-emerald-500 "
+              className="w-full pl-10 pr-4 py-2 shadow-inner text-gray-800 shadow-black/30 rounded-full placeholder:text-gray-400 border-0 bg-[#FFF8F0] focus:outline-none focus:ring-2 focus:ring-emerald-500"
             />
           </div>
         </div>
 
         {/* Profile Cards */}
-        <div className="flex align-center justify-center ">
-          <div className="flex flex-wrap justify-center lg:justify-between align-center w-full bg-[#FFF8F0] px-8 py-4 rounded-4xl shadow-inner shadow-black/30">
+        <div className="flex justify-center">
+          <div className="flex flex-wrap justify-center lg:justify-between w-full bg-[#FFF8F0] px-8 py-4 rounded-4xl shadow-inner shadow-black/30">
             {filteredProfile.map((profile, index) => (
               <DashboardCard
                 key={index}

@@ -23,7 +23,7 @@ export default function Nav() {
   };
 
   return (
-    <header className="px-24 bg-white  py-4 flex items-center justify-between relative">
+    <header className="md:px-24 sm:px-16 px-8 bg-white  py-4 flex items-center justify-between relative">
       <div className="flex items-center space-x-4">
         <button className="bg-gray-200 text-gray-600 px-4 py-2 rounded-lg font-medium">
           Logo
@@ -39,7 +39,7 @@ export default function Nav() {
         <div className=" flex items-center space-x-2 relative cursor-pointer" onClick={() => setDropdownOpen(!dropdownOpen)}>
           <span className="text-gray-800 font-medium">{profileData.name}</span>
           <div
-            className="w-8 h-8 rounded-full bg-center bg-cover border-2 border-emerald-500 "
+            className="w-8 h-8 rounded-full bg-center bg-cover border-4 border-emerald-800"
             style={{ backgroundImage: `url(${profileData.profileImage})` }}
             
           ></div>
