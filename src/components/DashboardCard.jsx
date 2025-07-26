@@ -41,14 +41,29 @@ export default function DashboardCard({ props, onStarToggle }) {
 
           {/* Content Section */}
           <div className="flex-1 w-full sm:w-[70%] text-left">
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 sm:mb-2 mb-0">
-              {props.name}
-            </h3>
-            <p className="text-gray-600 sm:mb-2 mb-0 text-sm">{props.username}</p>
-            <p className="text-gray-800 font-medium sm:mb-2 mb-0 text-sm">
-              {props.college}
-            </p>
-            <p className="text-gray-600 mb-4 text-sm">{props.location}</p>
+            <div className="hidden sm:block">
+  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
+    {props.name}
+  </h3>
+  <p className="text-gray-600 mb-2 text-sm">{props.username}</p>
+  <p className="text-gray-800 font-medium mb-2 text-sm">
+    {props.college}
+  </p>
+  <p className="text-gray-600 mb-4 text-sm">{props.location}</p>
+</div>
+
+<div className="block sm:hidden">
+  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+    {props.name}
+  </h3>
+  <div className="text-sm text-gray-600 mb-4">
+    <span>{props.username}</span>
+    <span className="mx-2 text-gray-400">•</span>
+    <span className="text-gray-800 font-medium">{props.college}</span>
+    <span className="mx-2 text-gray-400">•</span>
+    <span>{props.location}</span>
+  </div>
+</div>
 
             {/* Skills Section */}
             <div className="flex flex-wrap gap-2 mb-4 justify-start">
