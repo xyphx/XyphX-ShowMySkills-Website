@@ -162,7 +162,7 @@ export default function SkilloraProfile() {
 
         {/* Profile Cards */}
         <div className="flex justify-center">
-          <div className="flex flex-wrap justify-center lg:justify-between w-full bg-[#FFF8F0] px-8 py-4 rounded-4xl shadow-inner shadow-black/30">
+          <div className="flex flex-wrap justify-center lg:justify-between w-full bg-[#FFF8F0] sm:px-8 px-2 py-4 rounded-4xl shadow-inner shadow-black/30">
             {filteredProfile.map((profile, index) => (
               <DashboardCard
                 key={index}
