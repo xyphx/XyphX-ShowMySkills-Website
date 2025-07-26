@@ -73,7 +73,7 @@ const ProfilePage = () => {
               
               {/* Profile Picture and Star - Centered */}
               <div className="flex flex-col items-center">
-                <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white">
+                <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white">
                   <img
                     src={profileData.profileImage}
                     alt={profileData.name}
@@ -107,15 +107,15 @@ const ProfilePage = () => {
 
               {/* Profile Info - Centered */}
               <div className="flex flex-col items-center text-center space-y-2">
-                <h1 className="text-xl sm:text-2xl font-bold">{profileData.name}</h1>
+                <h1 className="text-2xl sm:text-2xl font-bold">{profileData.name} </h1>
                 <p className="text-white font-bold">{profileData.username}</p>
                 <p className="text-white-100 font-bold">{profileData.college}</p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 items-center mt-4">
-                  <button className="cursor-pointer bg-teal-600 hover:bg-teal-700 px-6 py-2 rounded-full text-sm font-medium transition-colors">
+                  <button className="cursor-pointer bg-teal-900 hover:bg-teal-700 px-6 py-2 rounded-full text-lg font-medium transition-colors">
                     Contact
                   </button>
-                  <div className="flex mb-6 space-x-4">
+                  <div className="flex mb-6 justify-center gap-3 bg-teal-600  px-6 py-2 w-[100vw]  rounded-full space-x-4">
                     <Instagram className="w-5 h-5 text-white cursor-pointer" />
                     <Linkedin className="w-5 h-5 text-white cursor-pointer" />
                     <Github className="w-5 h-5 text-white cursor-pointer" />
@@ -170,7 +170,7 @@ const ProfilePage = () => {
                     <button className="cursor-pointer bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded-full text-sm font-medium transition-colors">
                       Contact
                     </button>
-                    <div className="flex space-x-2 w-32 mb-16 justify-between">
+                    <div className="flex space-x-2 w-32  justify-between">
                       <Instagram className="w-5 h-5 text-white cursor-pointer" />
                       <Linkedin className="w-5 h-5 text-white cursor-pointer" />
                       <Github className="w-5 h-5 text-white cursor-pointer" />
