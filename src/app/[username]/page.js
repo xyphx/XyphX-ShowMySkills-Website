@@ -465,13 +465,13 @@ const ProfilePage = () => {
                 <FileText className="w-5 h-5 text-gray-700" />
                 Resume
               </h2>
-              <div className="flex items-center justify-between p-4 bg-gradient-to-r from-teal-50 to-emerald-50 rounded-lg border border-teal-200">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-teal-100 rounded-lg">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-gradient-to-r from-teal-50 to-emerald-50 rounded-lg border border-teal-200">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className="p-2 bg-teal-100 rounded-lg flex-shrink-0">
                     <FileText className="w-6 h-6 text-teal-600" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-gray-900 break-words">
                       {profileData.resumeName || `${profileData.displayName}_Resume.pdf`}
                     </p>
                     <p className="text-xs text-gray-600">PDF Document</p>
@@ -479,7 +479,7 @@ const ProfilePage = () => {
                 </div>
                 <button
                   onClick={handleResumeDownload}
-                  className="flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors font-medium"
+                  className="flex items-center justify-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition-colors font-medium w-full sm:w-auto flex-shrink-0"
                 >
                   <Download className="w-4 h-4" />
                   Download
@@ -491,7 +491,7 @@ const ProfilePage = () => {
           {/* Skills Section */}
           <div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Skills</h2>
-            <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+            <div className="flex flex-row flex-wrap gap-2 items-start justify-start">
               {profileData.skills && profileData.skills.length > 0 ? (
                 profileData.skills.map((skill, index) => (
                   <span
