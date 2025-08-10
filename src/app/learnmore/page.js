@@ -48,7 +48,7 @@ export default function LearnMore() {
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
                 We believe that talent deserves recognition. ShowMySkills is designed to 
                 bridge the gap between skilled individuals and those seeking their expertise. 
-                Whether you're a developer, designer, writer, or any other creative professional, 
+                Whether you&apos;re a developer, designer, writer, or any other creative professional, 
                 our platform gives you the tools to shine.
               </p>
               <div className="flex items-center space-x-2 text-teal-600">
@@ -240,14 +240,14 @@ export default function LearnMore() {
                 
                 <p className="text-gray-700 mb-6 leading-relaxed">
                   XyphX is a budding, service-based tech company with a bold ambition — to transform 
-                  into a revolutionary tech product powerhouse. We're building technology-driven 
+                  into a revolutionary tech product powerhouse. We&apos;re building technology-driven 
                   solutions that are smart, futuristic, and ready to redefine industries.
                 </p>
                 
                 <p className="text-gray-700 mb-8 leading-relaxed">
                   Our journey began with a vision to bridge the gap between current technology and 
                   the vast, untapped potential of digital innovation. Today, we stand at the forefront 
-                  of progress, crafting solutions that not only meet today's demands but are designed 
+                  of progress, crafting solutions that not only meet today&apos;s demands but are designed 
                   with tomorrow in mind.
                 </p>
                 

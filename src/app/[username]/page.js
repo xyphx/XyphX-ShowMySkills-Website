@@ -217,7 +217,7 @@ const ProfilePage = () => {
               {error || 'Profile not found'}
             </h1>
             <p className="text-gray-600 mb-4">
-              The profile you're looking for doesn't exist or couldn't be loaded.
+              The profile you&apos;re looking for doesn&apos;t exist or couldn&apos;t be loaded.
             </p>
             <button
               onClick={() => router.push('/home')}

@@ -1,6 +1,7 @@
 "use client";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import Link from "next/link";
 import { Users, Star, Briefcase, Award } from "lucide-react";
 
 export default function About() {
@@ -102,12 +103,12 @@ export default function About() {
           <div className="text-center bg-teal-600 text-white rounded-3xl p-8 md:p-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Show Your Skills?</h2>
             <p className="text-xl text-teal-100 mb-8">Join thousands of professionals building their digital presence.</p>
-            <a
+            <Link
               href="/auth"
               className="inline-block bg-white text-teal-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors"
             >
               Get Started Today
-            </a>
+            </Link>
           </div>
         </div>
       </div>

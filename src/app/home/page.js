@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Search,
   Star,
@@ -26,7 +26,7 @@ function SkilloraProfile() {
   const { user } = useAuth();
 
   // Fetch profiles from Firebase - now works for both authenticated and unauthenticated users
-  const fetchProfiles = async () => {
+  const fetchProfiles = useCallback(async () => {
     try {
       setLoading(true);
       console.log('Attempting to fetch profiles from Firestore...');
@@ -74,9 +74,48 @@ function SkilloraProfile() {
         }
       });
       
+      const fallbackData = [
+        {
+          id: '1',
+          name: "Amal Raj R",
+          username: "@ar6",
+          college: "CET",
+          location: "Tvm",
+          stars: 221,
+          skills: ["Web", "BlockChain", "CyberSecurity"],
+          profileImage: "/common-profile.png",
+          peoplewhostarredme: [],
+          starredbyme: [],
+          starred: false,
+          phone: '',
+          email: '',
+          instagram: '',
+          linkedin: '',
+          github: '',
+        },
+        {
+          id: '2',
+          name: "TonyStark",
+          username: "@tnystk",
+          college: "TKM",
+          location: "Kollam",
+          stars: 200,
+          skills: ["Web", "BlockChain"],
+          profileImage: "/common-profile.png",
+          peoplewhostarredme: [],
+          starredbyme: [],
+          starred: false,
+          phone: '',
+          email: '',
+          instagram: '',
+          linkedin: '',
+          github: '',
+        },
+      ];
+      
       if (fetchedProfiles.length === 0) {
         console.log('No profiles found in Firestore, using fallback data');
-        setProfiles(fallbackProfileData);
+        setProfiles(fallbackData);
       } else {
         setProfiles(fetchedProfiles);
       }
@@ -84,11 +123,49 @@ function SkilloraProfile() {
       console.error('Error fetching profiles:', error);
       console.log('Using fallback data due to Firestore error');
       // Fallback to static data if Firebase fails
-      setProfiles(fallbackProfileData);
+      const fallbackData = [
+        {
+          id: '1',
+          name: "Amal Raj R",
+          username: "@ar6",
+          college: "CET",
+          location: "Tvm",
+          stars: 221,
+          skills: ["Web", "BlockChain", "CyberSecurity"],
+          profileImage: "/common-profile.png",
+          peoplewhostarredme: [],
+          starredbyme: [],
+          starred: false,
+          phone: '',
+          email: '',
+          instagram: '',
+          linkedin: '',
+          github: '',
+        },
+        {
+          id: '2',
+          name: "TonyStark",
+          username: "@tnystk",
+          college: "TKM",
+          location: "Kollam",
+          stars: 200,
+          skills: ["Web", "BlockChain"],
+          profileImage: "/common-profile.png",
+          peoplewhostarredme: [],
+          starredbyme: [],
+          starred: false,
+          phone: '',
+          email: '',
+          instagram: '',
+          linkedin: '',
+          github: '',
+        },
+      ];
+      setProfiles(fallbackData);
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
 
   // Toggle star functionality - now requires authentication
   const toggleStar = async (profileId, currentlyStarred) => {
@@ -149,51 +226,11 @@ function SkilloraProfile() {
     }
   };
 
-  // Fallback static data
-  const fallbackProfileData = [
-    {
-      id: '1',
-      name: "Amal Raj R",
-      username: "@ar6",
-      college: "CET",
-      location: "Tvm",
-      stars: 221,
-      skills: ["Web", "BlockChain", "CyberSecurity"],
-      profileImage: "/common-profile.png",
-      peoplewhostarredme: [],
-      starredbyme: [],
-      starred: false,
-      phone: '',
-      email: '',
-      instagram: '',
-      linkedin: '',
-      github: '',
-    },
-    {
-      id: '2',
-      name: "TonyStark",
-      username: "@tnystk",
-      college: "TKM",
-      location: "Kollam",
-      stars: 200,
-      skills: ["Web", "BlockChain"],
-      profileImage: "/common-profile.png",
-      peoplewhostarredme: [],
-      starredbyme: [],
-      starred: false,
-      phone: '',
-      email: '',
-      instagram: '',
-      linkedin: '',
-      github: '',
-    },
-  ];
-
   useEffect(() => {
     setMounted(true);
     // Fetch profiles regardless of authentication status
     fetchProfiles();
-  }, [user]); // Re-fetch when user changes (login/logout)
+  }, [user, fetchProfiles]); // Re-fetch when user changes (login/logout)
 
   //loading
   if (!mounted) {
