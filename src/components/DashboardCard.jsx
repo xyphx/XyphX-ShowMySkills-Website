@@ -48,13 +48,13 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
       >
         {/* Profile Image Section */}
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <div className="relative flex flex-col justify-start items-start w-40  sm:mx-0">
+          <div className="relative flex flex-col justify-start items-start sm:w-40 w-full sm:mx-0 bg-[url('/pin.jpg')] bg-cover bg-center sm:bg-none sm:bg-white sm:rounded-lg rounded-2xl">
             <img
               src={props.profileImage}
               alt={props.name}
-              className="w-full h-[80%] sm:w-40 sm:h-[80%] rounded-tr-xl sm:rounded-tr-lg rounded-tl-lg rounded-br-lg rounded-bl-lg object-cover"
+              className="w-40 h-full sm:w-40 sm:h-[80%]  sm:rounded-tr-lg rounded-tl-lg rounded-br-lg rounded-bl-lg object-cover"
             />
-            <div className="absolute -bottom-2 left-0 right-0">
+            <div className="absolute sm:-bottom-2 -bottom-0 left-0 right-0 w-40 sm:w-full">
               <div className="bg-teal-500 text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center justify-center space-x-1">
                 <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-current" />
                 <span className="text-sm sm:text-lg font-bold">
@@ -196,13 +196,7 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
       )}
 
       {/* "My Profile" indicator for own profile */}
-      {isOwnProfile && (
-        <div className="absolute top-4 right-4 z-10">
-          <div className="bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-medium">
-            My Profile
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 }

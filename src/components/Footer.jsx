@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-teal-600 text-white py-12 mt-16">
+    <footer className="bg-teal-600 text-white py-12 mt-4">
       <div className="w-[90%] mx-auto sm:px-16 px-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8">
           {/* Logo and Navigation */}
@@ -43,7 +43,7 @@ export default function Footer() {
           {/* Social Links */}
           <div className="flex items-center gap-6">
             <a
-              href="xyphx.company@gmail.com"
+              href="mailto:xyphx.company@gmail.com"
               className="flex items-center gap-2 hover:text-emerald-200 transition-colors"
               title="Contact us via email"
             >
