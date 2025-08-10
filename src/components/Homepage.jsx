@@ -8,14 +8,32 @@ const HomePage = () => {
   const router = useRouter();
 
 const handleClick = () => {
-  router.push('/dash'); // Automatically loads dashboard/page.js
+  router.push('/auth'); // Navigate to authentication page
 };
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 overflow-hidden flex flex-col justify-center items-center">
       {/* Navigation */}
-      <nav className="flex w-[90%] items-center flex-row justify-between px-4 py-4 relative z-10">
-        <div className="text-2xl font-bold text-gray-800">Logo</div>
-        <button onClick={handleClick} className="curror-pointer bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-full transition-colors">
+      <nav className="flex w-[95%] items-center flex-row justify-between px-4 py-4 relative z-10">
+        <img src="/Logo.jpg" alt="ShowMySkills Logo" className="h-10 w-auto object-contain" />
+        
+        {/* Navigation Links */}
+        <div className="hidden md:flex items-center space-x-6">
+          <button 
+            onClick={() => router.push('/home')}
+            className="text-gray-700 cursor-pointer hover:text-teal-600 font-medium transition-colors"
+          >
+            Home
+          </button>
+          <button 
+            onClick={() => router.push('/learnmore')}
+            className="text-gray-700 cursor-pointer hover:text-teal-600 font-medium transition-colors"
+          >
+            Learn More
+          </button>
+        </div>
+
+        {/* Get Started Button */}
+        <button onClick={handleClick} className="cursor-pointer bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-full transition-colors">
           Get Started
         </button>
       </nav>
@@ -75,11 +93,14 @@ const handleClick = () => {
             </h1>
 
             {/* Main Headline */}
-            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
-              Showcase your skills.
+            <h2 className="text-4xl md:text-6xl font-bold text-gray-900  leading-tight">
+              Create Your Portfolio
+            </h2>
+            <h2 className="text-4xl md:text-6xl font-bold text-gray-900  leading-tight">
+              Showcase your skills
             </h2>
             <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4 leading-tight">
-              Get discovered.
+              Get discovered
             </h2>
 
             {/* Description */}

@@ -12,47 +12,151 @@ import {
 import { ExternalLink } from "lucide-react";
 
 import Nav from "@/components/Nav";
-import { useState } from "react";
-import { Content } from "next/font/google";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter, useSearchParams } from "next/navigation";
 import Footer from "@/components/Footer";
+import { doc, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
+import { db } from "@/config/firebase";
 
 const ProfilePage = () => {
-  const profileData = {
-    name: "Amal Raj R",
-    username: "@ar6",
-    college: "College of Engineering",
-    location: "Trivandrum",
-    stars: 221,
-    skills: ["Web", "BlockChain", "CyberSecurity"],
-    profileImage:
-      "https://media.istockphoto.com/id/1301234881/photo/portrait-of-successful-hispanic-business-man-looks-directly-at-the-camera-smile-happy-male.jpg?s=612x612&w=0&k=20&c=aQyg_qBxcPLCkm19I_EhU9LdbOo9uzDfVfe4nC6scZY=",
-    about:
-      "Hello Guys, I'm orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries",
-    experience: [
-      {content:"Hello Guys, I'm orem Ipsum is simply dummy text of theprinting and typesetting industry. Lorem Ipsum",link:"https://example.com"},
-      {content:"Hello Guys, I'm orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",link:"https://example.com"}
-    ],
-    achievements:  [
-      {content:"Hello Guys, I'm orem Ipsum is simply dummy text of theprinting and typesetting industry. Lorem Ipsum",link:"https://example.com"},
-      {content:"Hello Guys, I'm orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",link:"https://example.com"},
-    ],
-    works:  [
-      {content:"Hello Guys, I'm orem Ipsum is simply dummy text of theprinting and typesetting industry. Lorem Ipsum",link:"https://example.com"},
-      {content:"Hello Guys, I'm orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum",link:"https://example.com"},
-    ],
-  };
-  
+  const { getUserByUsername, user, updateUserProfile } = useAuth();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const username = searchParams.get('username');
+
+  const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [starred, setStarred] = useState(false);
-  const [starval, incrstar] = useState(profileData.stars);
-  
-  const handleClick = () => {
-    if (starred) {
-      incrstar(starval - 1);
-    } else {
-      incrstar(starval + 1);
+  const [starval, setStarval] = useState(0);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!username) {
+        setError('Username not provided');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const userData = await getUserByUsername(username);
+        if (userData) {
+          setProfileData(userData);
+          setStarval(userData.stars || 0);
+          
+          // Check if current user has starred this profile by checking their starredbyme array
+          if (user) {
+            const currentUserRef = doc(db, 'users', user.uid);
+            const currentUserSnap = await getDoc(currentUserRef);
+            if (currentUserSnap.exists()) {
+              const currentUserData = currentUserSnap.data();
+              const starredByMe = currentUserData.starredbyme || [];
+              setStarred(starredByMe.includes(userData.id));
+            }
+          }
+        } else {
+          setError('User not found');
+        }
+      } catch (err) {
+        setError('Error fetching profile');
+        console.error('Error fetching profile:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [username, getUserByUsername, user]);
+
+  const handleClick = async () => {
+    if (!user) {
+      router.push('/auth');
+      return;
     }
-    setStarred(!starred);
+
+    try {
+      const newStarred = !starred;
+      const newStarval = newStarred ? starval + 1 : starval - 1;
+      
+      // Optimistically update the UI
+      setStarred(newStarred);
+      setStarval(newStarval);
+
+      // Update both users' documents in the database
+      const profileRef = doc(db, 'users', profileData.id);
+      const currentUserRef = doc(db, 'users', user.uid);
+      
+      if (newStarred) {
+        // Add current user's ID to the target profile's peoplewhostarredme array
+        await updateDoc(profileRef, {
+          peoplewhostarredme: arrayUnion(user.uid),
+          stars: newStarval
+        });
+        
+        // Add target profile's ID to current user's starredbyme array
+        await updateDoc(currentUserRef, {
+          starredbyme: arrayUnion(profileData.id)
+        });
+      } else {
+        // Remove current user's ID from the target profile's peoplewhostarredme array
+        await updateDoc(profileRef, {
+          peoplewhostarredme: arrayRemove(user.uid),
+          stars: newStarval
+        });
+        
+        // Remove target profile's ID from current user's starredbyme array
+        await updateDoc(currentUserRef, {
+          starredbyme: arrayRemove(profileData.id)
+        });
+      }
+    } catch (error) {
+      console.error('Error updating star:', error);
+      // Revert the UI changes if the update fails
+      setStarred(!starred);
+      setStarval(starred ? starval + 1 : starval - 1);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Nav />
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading profile...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error || !profileData) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Nav />
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-800 mb-4">
+              {error || 'Profile not found'}
+            </h1>
+            <p className="text-gray-600 mb-4">
+              The profile you're looking for doesn't exist or couldn't be loaded.
+            </p>
+            <button
+              onClick={() => router.push('/home')}
+              className="bg-teal-600 hover:bg-teal-700 text-white px-6 py-2 rounded-lg"
+            >
+              Go to Dashboard
+            </button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -75,8 +179,8 @@ const ProfilePage = () => {
               <div className="flex flex-col items-center">
                 <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white">
                   <img
-                    src={profileData.profileImage}
-                    alt={profileData.name}
+                    src={profileData.profileImage || "https://via.placeholder.com/200x200?text=No+Image"}
+                    alt={profileData.displayName}
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -88,13 +192,15 @@ const ProfilePage = () => {
                   <div className="relative group">
                     <button
                       onClick={handleClick}
-                      className="cursor-pointer w-10 h-10 bg-teal-600/50 rounded-full flex items-center border-3 border-white justify-center"
+                      className={`cursor-pointer w-10 h-10 ${
+                        starred ? "bg-yellow-500/80" : "bg-teal-600/50"
+                      } rounded-full flex items-center border-3 border-white justify-center transition-colors`}
                     >
                       <Star
                         className={`w-5 h-5 ${
                           starred
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "fill-black text-black"
+                            ? "fill-yellow-200 text-yellow-200"
+                            : "fill-white text-white"
                         }`}
                       />
                     </button>
@@ -107,8 +213,8 @@ const ProfilePage = () => {
 
               {/* Profile Info - Centered */}
               <div className="flex flex-col items-center text-center space-y-2">
-                <h1 className="text-2xl sm:text-2xl font-bold">{profileData.name} </h1>
-                <p className="text-white font-bold">{profileData.username}</p>
+                <h1 className="text-2xl sm:text-2xl font-bold">{profileData.displayName}</h1>
+                <p className="text-white font-bold">@{profileData.username}</p>
                 <p className="text-white-100 font-bold">{profileData.college}</p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 items-center mt-4">
@@ -131,8 +237,8 @@ const ProfilePage = () => {
                 <div className="flex flex-col items-center">
                   <div className="w-50 h-50 rounded-full overflow-hidden border-4 border-white">
                     <img
-                      src={profileData.profileImage}
-                      alt={profileData.name}
+                      src={profileData.profileImage || "https://via.placeholder.com/200x200?text=No+Image"}
+                      alt={profileData.displayName}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -144,13 +250,15 @@ const ProfilePage = () => {
                     <div className="relative group">
                       <button
                         onClick={handleClick}
-                        className="cursor-pointer w-10 h-10 bg-teal-600/50 rounded-full flex items-center border-3 border-white justify-center"
+                        className={`cursor-pointer w-10 h-10 ${
+                          starred ? "bg-yellow-500/80" : "bg-teal-600/50"
+                        } rounded-full flex items-center border-3 border-white justify-center transition-colors`}
                       >
                         <Star
                           className={`w-5 h-5 ${
                             starred
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "fill-black text-black"
+                              ? "fill-yellow-200 text-yellow-200"
+                              : "fill-white text-white"
                           }`}
                         />
                       </button>
@@ -163,8 +271,8 @@ const ProfilePage = () => {
                 
                 {/* Profile Overview */}
                 <div className="flex flex-col pt-4">
-                  <h1 className="text-2xl font-bold">{profileData.name}</h1>
-                  <p className="text-white font-bold">{profileData.username}</p>
+                  <h1 className="text-2xl font-bold">{profileData.displayName}</h1>
+                  <p className="text-white font-bold">@{profileData.username}</p>
                   <p className="text-white-100 font-bold">{profileData.college}</p>
                   <div className="flex flex-row gap-4 justify-center items-center my-4">
                     <button className="cursor-pointer bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded-full text-sm font-medium transition-colors">
@@ -194,14 +302,18 @@ const ProfilePage = () => {
           <div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Skills</h2>
             <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-              {profileData.skills.map((skill, index) => (
-                <span
-                  key={index}
-                  className="bg-teal-100 text-teal-700 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-teal-200"
-                >
-                  {skill}
-                </span>
-              ))}
+              {profileData.skills && profileData.skills.length > 0 ? (
+                profileData.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="bg-teal-100 text-teal-700 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium border border-teal-200"
+                  >
+                    {skill}
+                  </span>
+                ))
+              ) : (
+                <p className="text-gray-500 italic">No skills listed</p>
+              )}
             </div>
           </div>
 
@@ -209,28 +321,34 @@ const ProfilePage = () => {
           <div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Experience</h2>
             <div className="space-y-4">
-              {profileData.experience.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3"
-                >
-                  <div className="flex gap-3 flex-1">
-                    <Diamond className="w-4 h-4 text-teal-600 mt-1 flex-shrink-0 fill-teal-600" />
-                    <p className="text-black text-sm sm:text-base">
-                      {item.content}
-                    </p>
-                  </div>
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-emerald-600 hover:underline text-sm sm:text-base ml-7 sm:ml-0"
+              {profileData.experience && profileData.experience.length > 0 ? (
+                profileData.experience.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3"
                   >
-                    See More
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              ))}
+                    <div className="flex gap-3 flex-1">
+                      <Diamond className="w-4 h-4 text-teal-600 mt-1 flex-shrink-0 fill-teal-600" />
+                      <p className="text-black text-sm sm:text-base">
+                        {item.content}
+                      </p>
+                    </div>
+                    {item.link && (
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-emerald-600 hover:underline text-sm sm:text-base ml-7 sm:ml-0"
+                      >
+                        See More
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 italic">No experience listed</p>
+              )}
             </div>
           </div>
 
@@ -238,28 +356,34 @@ const ProfilePage = () => {
           <div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Achievements</h2>
             <div className="space-y-4">
-              {profileData.achievements.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3"
-                >
-                  <div className="flex gap-3 flex-1">
-                    <Diamond className="w-4 h-4 text-teal-600 mt-1 flex-shrink-0 fill-teal-600" />
-                    <p className="text-black text-sm sm:text-base">
-                      {item.content}
-                    </p>
-                  </div>
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-emerald-600 hover:underline text-sm sm:text-base ml-7 sm:ml-0"
+              {profileData.achievements && profileData.achievements.length > 0 ? (
+                profileData.achievements.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3"
                   >
-                    See More
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              ))}
+                    <div className="flex gap-3 flex-1">
+                      <Diamond className="w-4 h-4 text-teal-600 mt-1 flex-shrink-0 fill-teal-600" />
+                      <p className="text-black text-sm sm:text-base">
+                        {item.content}
+                      </p>
+                    </div>
+                    {item.link && (
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-emerald-600 hover:underline text-sm sm:text-base ml-7 sm:ml-0"
+                      >
+                        See More
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 italic">No achievements listed</p>
+              )}
             </div>
           </div>
 
@@ -267,28 +391,34 @@ const ProfilePage = () => {
           <div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
             <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">My Works</h2>
             <div className="space-y-4">
-              {profileData.works.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3"
-                >
-                  <div className="flex gap-3 flex-1">
-                    <Diamond className="w-4 h-4 text-teal-600 mt-1 flex-shrink-0 fill-teal-600" />
-                    <p className="text-black text-sm sm:text-base">
-                      {item.content}
-                    </p>
-                  </div>
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-emerald-600 hover:underline text-sm sm:text-base ml-7 sm:ml-0"
+              {profileData.works && profileData.works.length > 0 ? (
+                profileData.works.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3"
                   >
-                    See More
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              ))}
+                    <div className="flex gap-3 flex-1">
+                      <Diamond className="w-4 h-4 text-teal-600 mt-1 flex-shrink-0 fill-teal-600" />
+                      <p className="text-black text-sm sm:text-base">
+                        {item.content}
+                      </p>
+                    </div>
+                    {item.link && (
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-emerald-600 hover:underline text-sm sm:text-base ml-7 sm:ml-0"
+                      >
+                        See More
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500 italic">No works listed</p>
+              )}
             </div>
           </div>
 

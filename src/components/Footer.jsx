@@ -1,58 +1,83 @@
 import {
-  Search,
-  Star,
-  Instagram,
   Linkedin,
   Github,
-  Facebook,
+  Home,
+  Info,
+  Mail,
 } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-teal-600 text-white py-12  mt-16">
+    <footer className="bg-teal-600 text-white py-12 mt-16">
       <div className="w-[90%] mx-auto sm:px-16 px-4">
-        <div className="flex justify-between items-start">
-          <div>
-            <h2 className="text-3xl font-bold mb-6">Skillora</h2>
-            <div className="space-y-2">
-              <a
-                href="#"
-                className="block hover:text-emerald-200 transition-colors"
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8">
+          {/* Logo and Navigation */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-8">
+            {/* Logo */}
+            <div>
+              <Link href="/home" className="hover:text-emerald-200 transition-colors">
+                <h2 className="text-3xl font-bold">ShowMySkills</h2>
+              </Link>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+              <Link
+                href="/home"
+                className="flex items-center gap-2 hover:text-emerald-200 transition-colors"
               >
-                Get Started
-              </a>
-              <a
-                href="#"
-                className="block hover:text-emerald-200 transition-colors"
+                <Home className="w-4 h-4" />
+                <span>Home</span>
+              </Link>
+              <Link
+                href="/learnmore"
+                className="flex items-center gap-2 hover:text-emerald-200 transition-colors"
               >
-                Learn More
-              </a>
+                <Info className="w-4 h-4" />
+                <span>Learn More</span>
+              </Link>
             </div>
           </div>
 
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Social Links</h3>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <Instagram className="w-4 h-4" />
-                <span>Instagram</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Linkedin className="w-4 h-4" />
-                <span>LinkedIn</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Facebook className="w-4 h-4" />
-                <span>Facebook</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="w-4 h-4 flex items-center justify-center font-bold text-xs">
-                  X
-                </span>
-                <span>X</span>
-              </div>
-            </div>
+          {/* Social Links */}
+          <div className="flex items-center gap-6">
+            <a
+              href="xyphx.company@gmail.com"
+              className="flex items-center gap-2 hover:text-emerald-200 transition-colors"
+              title="Contact us via email"
+            >
+              <Mail className="w-5 h-5" />
+              <span className="hidden sm:inline">Email</span>
+            </a>
+            <a
+              href="https://www.linkedin.com/company/xyphx/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-emerald-200 transition-colors"
+              title="Follow us on LinkedIn"
+            >
+              <Linkedin className="w-5 h-5" />
+              <span className="hidden sm:inline">LinkedIn</span>
+            </a>
+            <a
+              href="https://github.com/xyphx"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-emerald-200 transition-colors"
+              title="View our GitHub"
+            >
+              <Github className="w-5 h-5" />
+              <span className="hidden sm:inline">GitHub</span>
+            </a>
           </div>
+        </div>
+
+        {/* Copyright */}
+        <div className="mt-8 pt-8 border-t border-teal-500 text-center">
+          <p className="text-teal-100 text-sm">
+            © 2025 ShowMySkills. All rights reserved.
+          </p>
         </div>
       </div>
     </footer>
