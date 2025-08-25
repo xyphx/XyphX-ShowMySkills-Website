@@ -50,7 +50,13 @@ export const AuthProvider = ({ children }) => {
   // Sign in with Google
   const signInWithGoogle = async () => {
     try {
+      console.log('Starting Google Sign-in...');
+      console.log('Auth domain:', process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN);
+      console.log('API key exists:', !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
+      
       const result = await signInWithPopup(auth, googleProvider);
+      console.log('Google Sign-in successful:', result.user.email);
+      
       const user = result.user;
       
       // Check if user document exists
@@ -58,14 +64,44 @@ export const AuthProvider = ({ children }) => {
       const userSnap = await getDoc(userRef);
       const isNewUser = !userSnap.exists();
       
+      console.log('Is new user:', isNewUser);
+      
       // Create user document in Firestore if it doesn't exist
       if (isNewUser) {
+        console.log('Creating new user document...');
         await createUserDocument(user, { profileCompleted: false });
       }
       
       return { user, isNewUser };
     } catch (error) {
-      throw error;
+      console.error('Google Sign-in error details:');
+      console.error('Error code:', error.code);
+      console.error('Error message:', error.message);
+      console.error('Full error:', error);
+      
+      // Provide more user-friendly error messages
+      let userMessage = error.message;
+      switch (error.code) {
+        case 'auth/popup-blocked':
+          userMessage = 'Sign-in popup was blocked. Please allow popups and try again.';
+          break;
+        case 'auth/popup-closed-by-user':
+          userMessage = 'Sign-in was cancelled. Please try again.';
+          break;
+        case 'auth/unauthorized-domain':
+          userMessage = 'This domain is not authorized for Google Sign-in.';
+          break;
+        case 'auth/operation-not-allowed':
+          userMessage = 'Google Sign-in is not enabled. Please contact support.';
+          break;
+        case 'auth/invalid-api-key':
+          userMessage = 'Invalid configuration. Please contact support.';
+          break;
+        default:
+          userMessage = `Sign-in failed: ${error.message}`;
+      }
+      
+      throw new Error(userMessage);
     }
   };
 

@@ -1,6 +1,10 @@
+"use client"
 import { Mona_Sans } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+
+import { useEffect, useState } from "react";
+import Preloader from "@/components/Preloader";
 
 
 const monaSans = Mona_Sans({
@@ -10,17 +14,47 @@ const monaSans = Mona_Sans({
 });
 
 
-export const metadata = {
-  title: "ShowMySkills - Showcase Your Talent",
-  description: "A platform to showcase your skills and connect with others",
-};
 
 export default function RootLayout({ children }) {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Wait for all images to load
+    const handleLoad = () => setLoading(false);
+    const images = Array.from(document.images);
+    if (images.length === 0) {
+      setLoading(false);
+      return;
+    }
+    let loadedCount = 0;
+    images.forEach(img => {
+      if (img.complete) {
+        loadedCount++;
+      } else {
+        img.addEventListener('load', () => {
+          loadedCount++;
+          if (loadedCount === images.length) handleLoad();
+        });
+        img.addEventListener('error', () => {
+          loadedCount++;
+          if (loadedCount === images.length) handleLoad();
+        });
+      }
+    });
+    if (loadedCount === images.length) handleLoad();
+    // Cleanup listeners
+    return () => {
+      images.forEach(img => {
+        img.removeEventListener('load', handleLoad);
+        img.removeEventListener('error', handleLoad);
+      });
+    };
+  }, []);
+
   return (
     <html lang="en">
-      <body
-        className={`${monaSans.variable}  antialiased`}
-      >
+      <body className={`${monaSans.variable} antialiased`}>
+        {loading && <Preloader />}
         <AuthProvider>
           {children}
         </AuthProvider>

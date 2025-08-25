@@ -102,7 +102,7 @@ export default function Nav() {
         </div>
 
         {/* Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-6">
+        {/* <nav className="hidden md:flex items-center space-x-6">
           <button
             onClick={() => router.push('/home')}
             className="text-gray-700 cursor-pointer hover:text-teal-600 font-medium transition-colors"
@@ -115,7 +115,7 @@ export default function Nav() {
           >
             Learn More
           </button>
-        </nav>
+        </nav> */}
 
         <div className="flex items-center space-x-2 sm:space-x-4">
           {user ? (
