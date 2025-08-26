@@ -173,19 +173,8 @@ npm start
 npm run lint
 ```
 
-## 🤝 Contributing
 
-We welcome contributions! Please follow these steps:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🏢 About XyphX
 
@@ -204,14 +193,6 @@ If you encounter any issues or have questions:
 2. Create a new issue with detailed information
 3. Contact us at xyphx.company@gmail.com
 
-## 🎉 Acknowledgments
 
-- Thanks to all contributors and users
-- Built with ❤️ using modern web technologies
-- Special thanks to the open-source community
 
----
 
-**Ready to show your skills?** [Get started today!](https://showmyskills.netlify.app/)
-
-*Empowering creators worldwide to showcase their talents and build meaningful connections.*
