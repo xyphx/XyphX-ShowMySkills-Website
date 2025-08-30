@@ -73,7 +73,7 @@ const HomePage = () => {
           <div className="relative z-20 max-w-6xl mx-auto px-6 md:py-20 py-12">
             <div className="text-center">
               {/* Brand Name */}
-              <h1 className="text-3xl md:text-4xl font-bold mb-4">
+              <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4">
                 <span className="text-teal-500">ShowMySkills</span>
                 <span className="align-top absolute text-xs text-gray-500 ml-2 font-semibold">(beta)</span>
               </h1>
@@ -104,7 +104,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className="absolute bottom-0 md:left-[20%] left-1/2 z-10 transform -translate-x-1/2 ">
+          <div className="absolute bottom-0 md:left-[16%] left-1/2 z-10 transform -translate-x-1/2 ">
             <img src="/coder.png" alt="Coder" className="w-64 md:w-82" />
           </div>
           <div className="absolute hidden md:block -bottom-30 right-[5%] z-10 d ">

@@ -91,7 +91,7 @@ export default function Nav() {
         </div>
       )}
       
-      <header className="md:px-14 px-4 bg-white py-1 flex items-center justify-between relative">
+      <header className="md:px-24 px-4 bg-white py-1 flex items-center justify-between relative">
         <div className="flex items-center space-x-4">
           <img 
             src="/Logo.jpg" 
