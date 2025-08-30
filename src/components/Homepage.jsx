@@ -13,10 +13,10 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 overflow-hidden flex flex-col justify-center items-center">
+    <div className="md:max-h-screen bg-gradient-to-br from-gray-50 to-blue-50 overflow-hidden flex flex-col justify-center items-center">
       {/* Navigation */}
-      <nav className="flex w-[95%] items-center flex-row justify-between px-4 py-4 relative z-10">
-        <img src="/Logo.jpg" alt="ShowMySkills Logo" className="h-10 w-auto object-contain" />
+      <nav className="flex w-[95%] items-center flex-row justify-between px-4 py-1 relative z-10">
+        <img src="/Logo.jpg" alt="ShowMySkills Logo" className="h-16 w-auto object-contain" />
         {/* Navigation Links */}
         <div className="hidden md:flex items-center space-x-6">
           {/* <button 
@@ -32,14 +32,14 @@ const HomePage = () => {
         </button>
       </nav>
   {/* Main Content */}
-  <div className="relative w-[95%] lg:h-[85vh] mb-8 bg-[#FFF8F0] shadow-black/30 rounded-lg shadow-inner overflow-hidden">
+  <div className="relative w-[95%] lg:h-[100vh] h-[85vh] mb-2 md:mb-8 bg-[#FFF8F0] shadow-black/30 rounded-xl shadow-inner overflow-hidden">
           {/* Decorative Elements */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             {/* Top right stars */}
             <div className="absolute top-12 md:top-20 right-32 text-teal-300 opacity-70">
               <Star size={24} className="animate-pulse" />
             </div>
-            <div className="absolute hidden md:block  top-40 right-20 text-teal-400 opacity-60">
+            <div className="absolute hidden md:block top-40 right-20 text-teal-400 opacity-60">
               <Star size={16} className="animate-pulse delay-1000" />
             </div>
             {/* Left side lightning bolt */}
@@ -73,9 +73,9 @@ const HomePage = () => {
           <div className="relative z-20 max-w-6xl mx-auto px-6 md:py-20 py-12">
             <div className="text-center">
               {/* Brand Name */}
-              <h1 className="text-2xl md:text-4xl font-bold mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold mb-4">
                 <span className="text-teal-500">ShowMySkills</span>
-                <span className="align-top text-xs text-gray-500 ml-2 font-semibold">(beta)</span>
+                <span className="align-top absolute text-xs text-gray-500 ml-2 font-semibold">(beta)</span>
               </h1>
               {/* Main Headline */}
               <h2 className="text-4xl md:text-6xl font-bold text-gray-900  leading-tight">
@@ -94,8 +94,8 @@ const HomePage = () => {
                 peers and professionals.
               </p>
               {/* CTA Button */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button onClick={handleClick} className="cursor-pointer bg-teal-500 hover:bg-teal-600 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
+              <div className="flex flex-row items-center justify-center gap-2 md:gap-4">
+                <button onClick={handleClick} className="cursor-pointer bg-teal-500 hover:bg-teal-600 text-white px-8  py-4 rounded-full text-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
                   Get Started
                 </button>
                 <button onClick={() => router.push('/learnmore')} className="cursor-pointer bg-[#FFF8F0]/80 text-black border-2  px-8 py-4 rounded-full text-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
@@ -104,7 +104,7 @@ const HomePage = () => {
               </div>
             </div>
           </div>
-          <div className="absolute md:-bottom-10 bottom-0 md:left-[20%] left-1/2 z-10 transform -translate-x-1/2 ">
+          <div className="absolute bottom-0 md:left-[20%] left-1/2 z-10 transform -translate-x-1/2 ">
             <img src="/coder.png" alt="Coder" className="w-64 md:w-82" />
           </div>
           <div className="absolute hidden md:block -bottom-30 right-[5%] z-10 d ">
