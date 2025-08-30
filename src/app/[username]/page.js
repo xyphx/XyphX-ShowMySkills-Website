@@ -158,7 +158,7 @@ const ProfilePage = () => {
   const handleShare = async () => {
     const profileUrl = `${window.location.origin}/${profileData.username}`;
     const shareData = {
-      title: `${profileData.displayName}'s Profile`,
+      title: `${profileData.displayName}'s Portfolio`,
       text: `Check out ${profileData.displayName}'s skills and experience on ShowMySkills`,
       url: profileUrl
     };
