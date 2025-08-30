@@ -52,7 +52,7 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
             <img
               src={props.profileImage}
               alt={props.name}
-              className="w-40 h-full sm:w-40 sm:h-[80%]  sm:rounded-tr-lg rounded-tl-lg rounded-br-lg rounded-bl-lg object-cover"
+              className="w-40 h-40 sm:rounded-tr-lg rounded-tl-lg rounded-br-lg rounded-bl-lg object-cover"
             />
             <div className="absolute sm:-bottom-2 -bottom-0 left-0 right-0 w-40 sm:w-full">
               <div className="bg-teal-500 text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center justify-center space-x-1">
@@ -178,7 +178,7 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
 
           {/* Login Prompt Modal */}
           {showLoginPrompt && !isAuthenticated && (
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50 w-64">
+            <div className="absolute top-full -left-52 md:-left-40 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50 w-64">
               <div className="text-center">
                 <LogIn className="w-8 h-8 text-teal-600 mx-auto mb-2" />
                 <h3 className="text-sm font-semibold text-gray-900 mb-1">Sign in required</h3>

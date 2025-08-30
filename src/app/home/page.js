@@ -77,10 +77,10 @@ function SkilloraProfile() {
       const fallbackData = [
         {
           id: '1',
-          name: "Amal Raj R",
-          username: "@ar6",
-          college: "CET",
-          location: "Tvm",
+          name: "XyphX",
+          username: "@xyphx",
+          college: "",
+          location: "",
           stars: 221,
           skills: ["Web", "BlockChain", "CyberSecurity"],
           profileImage: "/common-profile.png",
@@ -92,25 +92,7 @@ function SkilloraProfile() {
           instagram: '',
           linkedin: '',
           github: '',
-        },
-        {
-          id: '2',
-          name: "TonyStark",
-          username: "@tnystk",
-          college: "TKM",
-          location: "Kollam",
-          stars: 200,
-          skills: ["Web", "BlockChain"],
-          profileImage: "/common-profile.png",
-          peoplewhostarredme: [],
-          starredbyme: [],
-          starred: false,
-          phone: '',
-          email: '',
-          instagram: '',
-          linkedin: '',
-          github: '',
-        },
+        }
       ];
       
       if (fetchedProfiles.length === 0) {
@@ -126,10 +108,10 @@ function SkilloraProfile() {
       const fallbackData = [
         {
           id: '1',
-          name: "Amal Raj R",
-          username: "@ar6",
-          college: "CET",
-          location: "Tvm",
+          name: "XyphX",
+          username: "@xyphx",
+          college: "",
+          location: "",
           stars: 221,
           skills: ["Web", "BlockChain", "CyberSecurity"],
           profileImage: "/common-profile.png",
@@ -141,25 +123,8 @@ function SkilloraProfile() {
           instagram: '',
           linkedin: '',
           github: '',
-        },
-        {
-          id: '2',
-          name: "TonyStark",
-          username: "@tnystk",
-          college: "TKM",
-          location: "Kollam",
-          stars: 200,
-          skills: ["Web", "BlockChain"],
-          profileImage: "/common-profile.png",
-          peoplewhostarredme: [],
-          starredbyme: [],
-          starred: false,
-          phone: '',
-          email: '',
-          instagram: '',
-          linkedin: '',
-          github: '',
-        },
+        
+        }
       ];
       setProfiles(fallbackData);
     } finally {
