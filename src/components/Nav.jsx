@@ -91,12 +91,12 @@ export default function Nav() {
         </div>
       )}
       
-      <header className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-24 bg-white py-3 sm:py-4 flex items-center justify-between relative">
+      <header className="md:px-14 px-4 bg-white py-1 flex items-center justify-between relative">
         <div className="flex items-center space-x-4">
           <img 
             src="/Logo.jpg" 
             alt="ShowMySkills Logo" 
-            className="h-8 sm:h-10 w-auto object-contain cursor-pointer" 
+            className="h-16 w-auto object-contain cursor-pointer" 
             onClick={() => router.push('/home')}
           />
         </div>
