@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://showmyskills.xyphx.com/sitemap.xml
