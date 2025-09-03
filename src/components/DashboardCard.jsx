@@ -82,14 +82,16 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
             <div className="block sm:hidden">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 {props.name}
-              </h3>
+              </h3><br></br>
               <div className="text-sm text-gray-600 mb-4">
                 <span>{formatUsername(props.username)}</span>
                 <span className="mx-2 text-gray-400">•</span>
+                <br></br>
                 <span className="text-gray-800 font-medium">
                   {props.college}
                 </span>
                 <span className="mx-2 text-gray-400">•</span>
+                <br></br>
                 <span>{props.location}</span>
               </div>
             </div>
