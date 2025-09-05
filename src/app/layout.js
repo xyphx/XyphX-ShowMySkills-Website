@@ -1,6 +1,6 @@
 import { Mona_Sans } from "next/font/google";
 import "./globals.css";
-import ClientLayout from "./ClientLayout"; // We'll create this
+import ClientLayout from "./ClientLayout";
 
 const monaSans = Mona_Sans({
   variable: "--font-mona-sans",
