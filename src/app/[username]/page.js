@@ -507,78 +507,76 @@ const ProfilePage = () => {
             </div>
           </div>
 
-<div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">My Works</h2>
-            <div className="space-y-6">
-              {profileData.works && profileData.works.length > 0 ? (
-                profileData.works.map((item, index) => (
-                  <div
-                    key={index}
-                    className="border-l-4 border-l-blue-500 pl-4 pb-4 border-b border-b-gray-100 last:border-b-0"
-                  >
-                    {/* Check if it's new format with detailed fields */}
-                    {item.title || item.description ? (
-                      <div className="space-y-2">
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
-                          <div>
-                            <h3 className="text-lg font-semibold text-gray-900">
-                              {item.title || 'Project'}
-                            </h3>
-                          </div>
-                        </div>
-                        {item.description && (
-                          <p className="text-gray-700 text-sm sm:text-base leading-relaxed mt-2">
-                            {item.description}
-                          </p>
-                        )}
-                        {item.link && (
-                          <a
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-emerald-600 hover:underline text-sm mt-2"
-                          >
-                            View Project
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                        )}
-                      </div>
-                    ) : (
-                      // Legacy format fallback
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
-                        <div className="flex gap-3 flex-1">
-                          <Diamond className="w-4 h-4 text-teal-600 mt-1 flex-shrink-0 fill-teal-600" />
-                          <p className="text-black text-sm sm:text-base">
-                            {item.content || item.description}
-                          </p>
-                        </div>
-                        {item.link && (
-                          <a
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-emerald-600 hover:underline text-sm sm:text-base ml-7 sm:ml-0"
-                          >
-                            See More
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500 italic">No works listed</p>
+{profileData.works && profileData.works.length > 0 && (
+  <div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
+    <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">My Works</h2>
+    <div className="space-y-6">
+      {profileData.works.map((item, index) => (
+        <div
+          key={index}
+          className="border-l-4 border-l-blue-500 pl-4 pb-4 border-b border-b-gray-100 last:border-b-0"
+        >
+          {/* Check if it's new format with detailed fields */}
+          {item.title || item.description ? (
+            <div className="space-y-2">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {item.title || 'Project'}
+                  </h3>
+                </div>
+              </div>
+              {item.description && (
+                <p className="text-gray-700 text-sm sm:text-base leading-relaxed mt-2">
+                  {item.description}
+                </p>
+              )}
+              {item.link && (
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-emerald-600 hover:underline text-sm mt-2"
+                >
+                  View Project
+                  <ExternalLink className="w-4 h-4" />
+                </a>
               )}
             </div>
-          </div>
+          ) : (
+            // Legacy format fallback
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+              <div className="flex gap-3 flex-1">
+                <Diamond className="w-4 h-4 text-teal-600 mt-1 flex-shrink-0 fill-teal-600" />
+                <p className="text-black text-sm sm:text-base">
+                  {item.content || item.description}
+                </p>
+              </div>
+              {item.link && (
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-emerald-600 hover:underline text-sm sm:text-base ml-7 sm:ml-0"
+                >
+                  See More
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 
           {/* Experience Section */}
-          <div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Experience</h2>
-            <div className="space-y-6">
-              {profileData.experience && profileData.experience.length > 0 ? (
-                profileData.experience.map((item, index) => (
+          {profileData.experience && profileData.experience.length > 0 && (
+            <div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Experience</h2>
+              <div className="space-y-6">
+                {profileData.experience.map((item, index) => (
                   <div
                     key={index}
                     className="border-l-4 border-l-teal-500 pl-4 pb-4 border-b border-b-gray-100 last:border-b-0"
@@ -649,19 +647,17 @@ const ProfilePage = () => {
                       </div>
                     )}
                   </div>
-                ))
-              ) : (
-                <p className="text-gray-500 italic">No experience listed</p>
-              )}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Achievements Section */}
-          <div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Achievements</h2>
-            <div className="space-y-6">
-              {profileData.achievements && profileData.achievements.length > 0 ? (
-                profileData.achievements.map((item, index) => (
+          {profileData.achievements && profileData.achievements.length > 0 && (
+            <div className="bg-white shadow-sm shadow-black/30 rounded-2xl p-4 sm:p-6">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">Achievements</h2>
+              <div className="space-y-6">
+                {profileData.achievements.map((item, index) => (
                   <div
                     key={index}
                     className="border-l-4 border-l-orange-500 pl-4 pb-4 border-b border-b-gray-100 last:border-b-0"
@@ -726,12 +722,10 @@ const ProfilePage = () => {
                       </div>
                     )}
                   </div>
-                ))
-              ) : (
-                <p className="text-gray-500 italic">No achievements listed</p>
-              )}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* My Works Section */}
           
