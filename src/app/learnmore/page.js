@@ -15,7 +15,7 @@ export default function LearnMore() {
   };
 
   return (
-    <div className="min-h-screen bg-teal-50">
+    <div className="min-h-screen bg-gray-900">
       {/* Navigation */}
       <Nav />
 
@@ -27,10 +27,10 @@ export default function LearnMore() {
               alt="ShowMySkills Logo"
                 className="h-32 w-auto mb-6"
             />
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
             About <span className="text-teal-500">ShowMySkills</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+          <p className="text-xl text-white mb-8 leading-relaxed">
             Empowering the next generation of creators, developers, and innovators 
             to showcase their talents and connect with opportunities.
           </p>

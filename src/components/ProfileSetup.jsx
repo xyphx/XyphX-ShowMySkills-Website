@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { predefinedSkills } from '@/utils/skills';
@@ -26,6 +26,14 @@ import {
 } from 'lucide-react';
 
 export default function ProfileSetup() {
+  // Refs for error fields
+  const displayNameRef = useRef(null);
+  const usernameRef = useRef(null);
+  const locationRef = useRef(null);
+  const collegeRef = useRef(null);
+  const aboutRef = useRef(null);
+  const skillsRef = useRef(null);
+  const phoneRef = useRef(null);
   const { user, updateUserProfile, checkUsernameAvailability, getUserProfile } = useAuth();
   const { uploadImage, uploadResume, isUploading, uploadProgress } = useFileUpload();
   const router = useRouter();
@@ -41,12 +49,20 @@ export default function ProfileSetup() {
   const [resumeUploading, setResumeUploading] = useState(false);
 
   const [formData, setFormData] = useState({
+    displayName: '',
     username: '',
+    type: '', // College or School
     college: '',
+    course: '',
+    customCourse: '',
+    branch: '',
+    customBranch: '',
+    stream: '',
+    customStream: '',
     location: '',
     about: '',
     skills: [''],
-    experience: [{ title: '', organization: '', timePeriod: '', location: '', description: '', link: '' }],
+    experience: [{ title: '', organization: '', startDate: '', endDate: '', timePeriod: '', location: '', description: '', link: '' }],
     achievements: [{ title: '', organization: '', date: '', description: '', link: '' }],
     works: [{ title: '', description: '', link: '' }],
     profileImage: null,
@@ -59,6 +75,9 @@ export default function ProfileSetup() {
     resumeName: ''
   });
 
+    // State for manual skill input
+    const [manualSkill, setManualSkill] = useState('');
+
   // Load existing user data - always check for existing data
   useEffect(() => {
     const loadUserData = async () => {
@@ -69,8 +88,16 @@ export default function ProfileSetup() {
           if (userData) {
             // Pre-fill form with existing data
             setFormData({
+              displayName: userData.displayName || user.displayName || '',
               username: userData.username || '',
+              type: userData.type || '',
               college: userData.college || '',
+              course: userData.course || '',
+              customCourse: userData.customCourse || '',
+              branch: userData.branch || '',
+              customBranch: userData.customBranch || '',
+              stream: userData.stream || '',
+              customStream: userData.customStream || '',
               location: userData.location || '',
               about: userData.about || '',
               skills: userData.skills && userData.skills.length > 0 ? userData.skills : [''],
@@ -78,35 +105,37 @@ export default function ProfileSetup() {
                 userData.experience.map(exp => ({
                   title: exp.title || '',
                   organization: exp.organization || '',
+                  startDate: exp.startDate || '',
+                  endDate: exp.endDate || '',
                   timePeriod: exp.timePeriod || '',
                   location: exp.location || '',
-                  description: exp.description || exp.content || '', // Support legacy content field
+                  description: exp.description || exp.content || '',
                   link: exp.link || ''
                 })) : 
-                [{ title: '', organization: '', timePeriod: '', location: '', description: '', link: '' }],
+                [{ title: '', organization: '', startDate: '', endDate: '', timePeriod: '', location: '', description: '', link: '' }],
               achievements: userData.achievements && userData.achievements.length > 0 ? 
                 userData.achievements.map(ach => ({
                   title: ach.title || '',
                   organization: ach.organization || '',
                   date: ach.date || '',
-                  description: ach.description || ach.content || '', // Support legacy content field
+                  description: ach.description || ach.content || '',
                   link: ach.link || ''
                 })) : 
                 [{ title: '', organization: '', date: '', description: '', link: '' }],
               works: userData.works && userData.works.length > 0 ? 
                 userData.works.map(work => ({
                   title: work.title || '',
-                  description: work.description || work.content || '', // Support legacy content field
+                  description: work.description || work.content || '',
                   link: work.link || ''
                 })) : 
                 [{ title: '', description: '', link: '' }],
-              profileImage: null, // File object will be null, but we'll set the preview
+              profileImage: null,
               phone: userData.phone || '',
-              email: userData.email || userData.email || '', // Use auth email as fallback
+              email: userData.email || userData.email || '',
               instagram: userData.instagram || '',
               linkedin: userData.linkedin || '',
               github: userData.github || '',
-              resume: null, // File object will be null
+              resume: null,
               resumeName: userData.resumeName || ''
             });
             
@@ -188,6 +217,18 @@ export default function ProfileSetup() {
     }
   };
 
+    // Add manual skill
+    const addManualSkill = () => {
+      const skill = manualSkill.trim();
+      if (skill && !formData.skills.includes(skill)) {
+        setFormData(prev => ({
+          ...prev,
+          skills: [...prev.skills.filter(s => s !== ''), skill, '']
+        }));
+        setManualSkill('');
+      }
+    };
+
   const removeSkill = (index) => {
     if (formData.skills.length > 1) {
       const newSkills = formData.skills.filter((_, i) => i !== index);
@@ -211,7 +252,7 @@ export default function ProfileSetup() {
     if (arrayName === 'experience') {
       setFormData(prev => ({
         ...prev,
-        [arrayName]: [...prev[arrayName], { title: '', organization: '', timePeriod: '', location: '', description: '', link: '' }]
+        [arrayName]: [...prev[arrayName], { title: '', organization: '', startDate: '', endDate: '', timePeriod: '', location: '', description: '', link: '' }]
       }));
     } else if (arrayName === 'achievements') {
       setFormData(prev => ({
@@ -324,6 +365,9 @@ export default function ProfileSetup() {
   const validateForm = async () => {
     const newErrors = {};
 
+    if (!formData.displayName.trim()) {
+      newErrors.displayName = 'Display name is required';
+    }
     if (!formData.username) {
       newErrors.username = 'Username is required';
     } else if (formData.username.length < 3) {
@@ -355,8 +399,20 @@ export default function ProfileSetup() {
       }
     }
 
+    if (!formData.type) {
+      newErrors.type = 'Please select College or School';
+    }
     if (!formData.college.trim()) {
-      newErrors.college = 'College/Institution is required';
+      newErrors.college = 'College/School Name is required';
+    }
+    if (!formData.course && !formData.customCourse) {
+      newErrors.course = 'Please select or enter your course';
+    }
+    if (formData.type === 'College' && !formData.branch && !formData.customBranch) {
+      newErrors.branch = 'Please select or enter your branch';
+    }
+    if (formData.type === 'School' && !formData.stream && !formData.customStream) {
+      newErrors.stream = 'Please select or enter your stream';
     }
 
     if (!formData.location.trim()) {
@@ -393,7 +449,26 @@ export default function ProfileSetup() {
     e.preventDefault();
     
     const isValid = await validateForm();
-    if (!isValid) return;
+    if (!isValid) {
+      // Scroll to first error field
+      const errorOrder = [
+        { key: 'displayName', ref: displayNameRef },
+        { key: 'username', ref: usernameRef },
+        { key: 'location', ref: locationRef },
+        { key: 'college', ref: collegeRef },
+        { key: 'about', ref: aboutRef },
+        { key: 'skills', ref: skillsRef },
+        { key: 'phone', ref: phoneRef }
+      ];
+      for (const { key, ref } of errorOrder) {
+        if (errors[key] && ref.current) {
+          ref.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          ref.current.focus && ref.current.focus();
+          break;
+        }
+      }
+      return;
+    }
 
     setLoading(true);
     try {
@@ -402,9 +477,13 @@ export default function ProfileSetup() {
       const validExperience = formData.experience.filter(item => 
         item.title.trim() !== '' && 
         item.organization.trim() !== '' && 
-        item.timePeriod.trim() !== '' && 
+        item.startDate.trim() !== '' && 
+        item.endDate.trim() !== '' && 
         item.description.trim() !== ''
-      );
+      ).map(item => ({
+        ...item,
+        timePeriod: item.startDate && item.endDate ? `${item.startDate} - ${item.endDate}` : item.timePeriod
+      }));
       const validAchievements = formData.achievements.filter(item => 
         item.title.trim() !== '' && 
         item.date.trim() !== '' && 
@@ -458,8 +537,16 @@ export default function ProfileSetup() {
       }
 
       const profileData = {
+        displayName: formData.displayName.trim(),
         username: formData.username.trim(),
+        type: formData.type,
         college: formData.college.trim(),
+        course: formData.course || formData.customCourse,
+        customCourse: formData.customCourse,
+        branch: formData.branch || formData.customBranch,
+        customBranch: formData.customBranch,
+        stream: formData.stream || formData.customStream,
+        customStream: formData.customStream,
         location: formData.location.trim(),
         about: formData.about.trim(),
         skills: validSkills,
@@ -558,7 +645,6 @@ export default function ProfileSetup() {
               </button>
             )}
           </div>
-          
           {/* Title and Organization Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -586,25 +672,55 @@ export default function ProfileSetup() {
               />
             </div>
           </div>
-
-          {/* Time Period and Location Row */}
+          {/* Month/Year Picker Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Time Period *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Start Date *</label>
               <input
-                type="text"
-                value={item.timePeriod}
-                onChange={(e) => handleArrayItemChange('experience', index, 'timePeriod', e.target.value)}
-                placeholder="e.g., Jan 2023 - Present, Summer 2023"
+                type="month"
+                value={item.startDate}
+                onChange={e => handleArrayItemChange('experience', index, 'startDate', e.target.value)}
                 className="w-full px-3 py-2 border text-gray-700 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Location
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">End Date *</label>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="month"
+                  value={item.endDate !== 'Present' ? item.endDate : ''}
+                  onChange={e => handleArrayItemChange('experience', index, 'endDate', e.target.value)}
+                  className="w-full px-3 py-2 border text-gray-700 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  min={item.startDate || undefined}
+                  disabled={!item.startDate || item.endDate === 'Present'}
+                />
+                <label className="flex items-center gap-1 text-sm text-gray-700">
+                  <input
+                    type="checkbox"
+                    checked={item.endDate === 'Present'}
+                    onChange={e => handleArrayItemChange('experience', index, 'endDate', e.target.checked ? 'Present' : '')}
+                    disabled={!item.startDate}
+                    
+                  />
+                  Present
+                </label>
+              </div>
+            </div>
+          </div>
+          {/* Time Period and Location Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Time Period (auto-filled)</label>
+              <input
+                type="text"
+                value={item.startDate && item.endDate ? `${item.startDate} - ${item.endDate}` : item.timePeriod}
+                readOnly
+                className="w-full px-3 py-2 border text-gray-700 border-gray-300 rounded-md bg-gray-100"
+                placeholder="e.g., Jan 2023 - Present"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
               <input
                 type="text"
                 value={item.location}
@@ -614,12 +730,9 @@ export default function ProfileSetup() {
               />
             </div>
           </div>
-
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description *
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
             <textarea
               value={item.description}
               onChange={(e) => handleArrayItemChange('experience', index, 'description', e.target.value)}
@@ -628,12 +741,9 @@ export default function ProfileSetup() {
               rows="4"
             />
           </div>
-
           {/* Link */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Link (Optional)
-            </label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Link (Optional)</label>
             <input
               type="url"
               value={item.link}
@@ -712,11 +822,11 @@ export default function ProfileSetup() {
               Date *
             </label>
             <input
-              type="text"
+              type="month"
               value={item.date}
               onChange={(e) => handleArrayItemChange('achievements', index, 'date', e.target.value)}
-              placeholder="e.g., March 2024, 2023-2024"
               className="w-full px-3 py-2 border text-gray-700 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              placeholder="Select month and year"
             />
           </div>
 
@@ -904,6 +1014,30 @@ export default function ProfileSetup() {
           <form onSubmit={handleSubmit} className="space-y-8">
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Display Name */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Display Name *
+                </label>
+                <div className="relative">
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    name="displayName"
+                    value={formData.displayName}
+                    onChange={handleInputChange}
+                    ref={displayNameRef}
+                    className={`w-full pl-10 pr-4 text-gray-700 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${
+                      errors.displayName ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="Your full name"
+                  />
+                </div>
+                {errors.displayName && (
+                  <p className="mt-1 text-sm text-red-600">{errors.displayName}</p>
+                )}
+              </div>
+
               {/* Username */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -916,6 +1050,7 @@ export default function ProfileSetup() {
                     name="username"
                     value={formData.username}
                     onChange={handleInputChange}
+                    ref={usernameRef}
                     className={`w-full pl-10 pr-4 text-gray-700 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${
                       errors.username ? 'border-red-500' : 'border-gray-300'
                     }`}
@@ -939,6 +1074,7 @@ export default function ProfileSetup() {
                     name="location"
                     value={formData.location}
                     onChange={handleInputChange}
+                    ref={locationRef}
                     className={`w-full pl-10 text-gray-700 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${
                       errors.location ? 'border-red-500' : 'border-gray-300'
                     }`}
@@ -951,11 +1087,25 @@ export default function ProfileSetup() {
               </div>
             </div>
 
-            {/* College */}
+            {/* Type: College or School */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                College/Institution *
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Type *</label>
+              <select
+                name="type"
+                value={formData.type}
+                onChange={handleInputChange}
+                className={`w-full px-3 py-3 border rounded-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500 ${errors.type ? 'border-red-500' : 'border-gray-300'}`}
+              >
+                <option value="">Select College or School</option>
+                <option value="College">College</option>
+                <option value="School">School</option>
+              </select>
+              {errors.type && <p className="mt-1 text-sm text-red-600">{errors.type}</p>}
+            </div>
+
+            {/* College/School Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{formData.type === 'School' ? 'School Name *' : 'College Name *'}</label>
               <div className="relative">
                 <GraduationCap className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
@@ -963,16 +1113,116 @@ export default function ProfileSetup() {
                   name="college"
                   value={formData.college}
                   onChange={handleInputChange}
-                  className={`w-full text-gray-700 pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${
-                    errors.college ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="Your college or institution"
+                  ref={collegeRef}
+                  className={`w-full text-gray-700 pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${errors.college ? 'border-red-500' : 'border-gray-300'}`}
+                  placeholder={formData.type === 'School' ? 'Your school name' : 'Your college name'}
                 />
               </div>
-              {errors.college && (
-                <p className="mt-1 text-sm text-red-600">{errors.college}</p>
-              )}
+              {errors.college && <p className="mt-1 text-sm text-red-600">{errors.college}</p>}
             </div>
+
+            {/* Course Selection */}
+            {formData.type && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Course *</label>
+                <select
+                  name="course"
+                  value={formData.course}
+                  onChange={handleInputChange}
+                  className={`w-full text-gray-700 px-3 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${errors.course ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <option value="">Select your course</option>
+                  {formData.type === 'College' ? (
+                    <>
+                      <option value="BTech">BTech</option>
+                      <option value="BSc">BSc</option>
+                      <option value="MTech">MTech</option>
+                      <option value="MBA">MBA</option>
+                      <option value="Other">Other (Enter manually)</option>
+                    </>
+                  ) : (
+                    <>
+                      <option value="PlusOne">+1</option>
+                      <option value="PlusTwo">+2</option>
+                      <option value="Other">Other (Enter manually)</option>
+                    </>
+                  )}
+                </select>
+                {formData.course === 'Other' && (
+                  <input
+                    type="text"
+                    name="customCourse"
+                    value={formData.customCourse}
+                    onChange={handleInputChange}
+                    className="w-full mt-2 px-3 py-3 text-gray-700 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 border-gray-300"
+                    placeholder="Enter your course manually"
+                  />
+                )}
+                {errors.course && <p className="mt-1 text-sm text-red-600">{errors.course}</p>}
+              </div>
+            )}
+
+            {/* Stream Selection (only for School) */}
+            {formData.type === 'School' && (formData.course || formData.customCourse) && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Stream *</label>
+                <select
+                  name="stream"
+                  value={formData.stream}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 py-3 text-gray-700 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${errors.stream ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <option value="">Select your stream</option>
+                  <option value="Science">Science</option>
+                  <option value="Commerce">Commerce</option>
+                  <option value="Arts">Arts</option>
+                  <option value="Other">Other (Enter manually)</option>
+                </select>
+                {formData.stream === 'Other' && (
+                  <input
+                    type="text"
+                    name="customStream"
+                    value={formData.customStream}
+                    onChange={handleInputChange}
+                    className="w-full mt-2 px-3 py-3 text-gray-700 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 border-gray-300"
+                    placeholder="Enter your stream manually"
+                  />
+                )}
+                {errors.stream && <p className="mt-1 text-sm text-red-600">{errors.stream}</p>}
+              </div>
+            )}
+
+            {/* Branch Selection (only for College) */}
+            {formData.type === 'College' && (formData.course || formData.customCourse) && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Branch *</label>
+                <select
+                  name="branch"
+                  value={formData.branch}
+                  onChange={handleInputChange}
+                  className={`w-full px-3 py-3 text-gray-700 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${errors.branch ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <option value="">Select your branch</option>
+                  <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+                  <option value="Mechanical Engineering">Mechanical Engineering</option>
+                  <option value="Electrical Engineering">Electrical Engineering</option>
+                  <option value="Civil Engineering">Civil Engineering</option>
+                  <option value="Electronics and Communication">Electronics and Communication</option>
+                  <option value="Other">Other (Enter manually)</option>
+                </select>
+                {formData.branch === 'Other' && (
+                  <input
+                    type="text"
+                    name="customBranch"
+                    value={formData.customBranch}
+                    onChange={handleInputChange}
+                    className="w-full mt-2 px-3 py-3 text-gray-700 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 border-gray-300"
+                    placeholder="Enter your branch manually"
+                  />
+                )}
+                {errors.branch && <p className="mt-1 text-sm text-red-600">{errors.branch}</p>}
+              </div>
+            )}
 
             {/* About */}
             <div>
@@ -986,6 +1236,7 @@ export default function ProfileSetup() {
                   value={formData.about}
                   onChange={handleInputChange}
                   rows="4"
+                  ref={aboutRef}
                   className={`w-full text-gray-700 pl-10 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${
                     errors.about ? 'border-red-500' : 'border-gray-300'
                   }`}
@@ -1002,7 +1253,7 @@ export default function ProfileSetup() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Skills *
               </label>
-              <div className="space-y-3">
+              <div className="space-y-3" ref={skillsRef}>
                 {/* Display selected skills as tags */}
                 {formData.skills.filter(skill => skill.trim() !== '').length > 0 && (
                   <div className="flex flex-wrap gap-2 mb-4">
@@ -1044,6 +1295,24 @@ export default function ProfileSetup() {
                   </select>
                 </div>
 
+                  {/* Manual skill input */}
+                  <div className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={manualSkill}
+                      onChange={e => setManualSkill(e.target.value)}
+                      className="flex-1 px-3 py-2 border text-gray-700 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      placeholder="Add a skill manually..."
+                    />
+                    <button
+                      type="button"
+                      onClick={addManualSkill}
+                      className="px-4 py-2 bg-teal-600  text-white rounded-xl hover:bg-teal-700 transition-colors"
+                    >
+                      Add
+                    </button>
+                  </div>
+
                 {formData.skills.filter(skill => skill.trim() !== '').length === 0 && (
                   <p className="text-sm text-gray-500">Please select at least one skill from the dropdown above.</p>
                 )}
@@ -1061,49 +1330,50 @@ export default function ProfileSetup() {
                 Contact Information
               </h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Email */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      readOnly
-                      className="w-full pl-10 pr-4 text-gray-700 py-3 border border-gray-300 rounded-xl bg-gray-50 cursor-not-allowed"
-                      placeholder="your.email@example.com"
-                    />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        readOnly
+                        className="w-full pl-10 pr-4 text-gray-700 py-3 border border-gray-300 rounded-xl bg-gray-50 cursor-not-allowed"
+                        placeholder="your.email@example.com"
+                      />
+                    </div>
+                    <p className="mt-1 text-xs text-gray-500">Email cannot be changed</p>
                   </div>
-                  <p className="mt-1 text-xs text-gray-500">Email cannot be changed</p>
-                </div>
 
-                {/* Phone */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 text-gray-700 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${
-                        errors.phone ? 'border-red-500' : 'border-gray-300'
-                      }`}
-                      placeholder="+91 12345 67890"
-                    />
+                  {/* Phone */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number
+                    </label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        ref={phoneRef}
+                        className={`w-full pl-10 pr-4 text-gray-700 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 ${
+                          errors.phone ? 'border-red-500' : 'border-gray-300'
+                        }`}
+                        placeholder="+91 12345 67890"
+                      />
+                    </div>
+                    {errors.phone && (
+                      <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+                    )}
                   </div>
-                  {errors.phone && (
-                    <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
-                  )}
                 </div>
-              </div>
             </div>
 
             {/* Social Links */}

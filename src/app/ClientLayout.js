@@ -1,48 +1,24 @@
 "use client";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
-import Preloader from "@/components/Preloader";
+import Loader from "@/components/Loader";
+import { usePathname } from "next/navigation";
 
 export default function ClientLayout({ children }) {
-  const [loading, setLoading] = useState(true);
+  const [showLoader, setShowLoader] = useState(true);
+  const pathname = usePathname();
 
   useEffect(() => {
-    const handleLoad = () => setLoading(false);
-    const images = Array.from(document.images);
-
-    if (images.length === 0) {
-      setLoading(false);
-      return;
-    }
-
-    let loadedCount = 0;
-    images.forEach((img) => {
-      if (img.complete) {
-        loadedCount++;
-      } else {
-        img.addEventListener("load", () => {
-          loadedCount++;
-          if (loadedCount === images.length) handleLoad();
-        });
-        img.addEventListener("error", () => {
-          loadedCount++;
-          if (loadedCount === images.length) handleLoad();
-        });
-      }
-    });
-    if (loadedCount === images.length) handleLoad();
-
-    return () => {
-      images.forEach((img) => {
-        img.removeEventListener("load", handleLoad);
-        img.removeEventListener("error", handleLoad);
-      });
-    };
-  }, []);
+    setShowLoader(true);
+    const timer = setTimeout(() => {
+      setShowLoader(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [pathname]);
 
   return (
     <>
-      {loading && <Preloader />}
+      {showLoader && <Loader />}
       <AuthProvider>{children}</AuthProvider>
     </>
   );
