@@ -76,6 +76,9 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
               <p className="text-gray-800 font-medium mb-2 text-sm">
                 {props.college}
               </p>
+              <p className="text-gray-800 font-medium mb-2 text-sm">
+                {props.course ? props.course : props.customCourse}
+              </p>
               <p className="text-gray-600 mb-4 text-sm">{props.location}</p>
             </div>
 
@@ -89,6 +92,11 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
                 <br></br>
                 <span className="text-gray-800 font-medium">
                   {props.college}
+                </span>
+                <span className="mx-2 text-gray-400">•</span>
+                <br></br>
+                <span className="text-gray-800 font-medium">
+                  {props.course ? props.course : props.customCourse}
                 </span>
                 <span className="mx-2 text-gray-400">•</span>
                 <br></br>

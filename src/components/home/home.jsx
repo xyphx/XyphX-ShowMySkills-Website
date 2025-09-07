@@ -18,7 +18,7 @@ import DashboardCard from "@/components/DashboardCard";
 
 function SkilloraProfile() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Category");
+  const [selectedCategory, setSelectedCategory] = useState("All Skills");
   const [mounted, setMounted] = useState(false);
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -69,6 +69,8 @@ function SkilloraProfile() {
             instagram: data.instagram || '',
             linkedin: data.linkedin || '',
             github: data.github || '',
+            course: data.course || '',
+            customCourse: data.customCourse || '',
           });
         }
       });
@@ -91,6 +93,8 @@ function SkilloraProfile() {
           instagram: '',
           linkedin: '',
           github: '',
+          course: '',
+          customCourse: '',
         }
       ];
       
@@ -213,7 +217,7 @@ function SkilloraProfile() {
 
   //filter by category
   const categorizedProfile = sortedProfile.filter((profile) => {
-    if (selectedCategory === "Category") {
+    if (selectedCategory === "All Skills") {
       return true;
     }
     // Get skills that belong to the selected category
@@ -221,7 +225,7 @@ function SkilloraProfile() {
     // Check if the profile has any skills that match the category
     return profile.skills.some(skill => categorySkills.includes(skill));
   });
-  //filter by search
+  //filter by search (now includes skills)
   const filteredProfile = categorizedProfile.filter((profile) => {
     const searchLower = searchQuery.toLowerCase();
     return (
@@ -229,7 +233,8 @@ function SkilloraProfile() {
       profile.username.toLowerCase().includes(searchLower) ||
       `@${profile.username}`.toLowerCase().includes(searchLower) ||
       profile.college.toLowerCase().includes(searchLower) ||
-      profile.location.toLowerCase().includes(searchLower)
+      profile.location.toLowerCase().includes(searchLower) ||
+      profile.skills.some(skill => skill.toLowerCase().includes(searchLower))
     );
   });
 
@@ -257,7 +262,7 @@ function SkilloraProfile() {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="appearance-none w-full bg-white border-2 border-emerald-500 rounded-full px-4 py-2 text-emerald-600 pr-8 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
             >
-              <option>Category</option>
+              <option value="All Skills">All</option>
               {skillCategories.map((category) => (
                 <option key={category} value={category}>
                   {category}

@@ -233,7 +233,8 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
+    <div className={showContactModal ? 'blurred-bg' : ''}>
       {/* Header */}
       <Nav />
 
@@ -312,7 +313,25 @@ const ProfilePage = () => {
               <div className="flex flex-col items-center text-center space-y-2">
                 <h1 className="text-2xl sm:text-2xl font-bold">{profileData.displayName}</h1>
                 <p className="text-white font-bold">@{profileData.username}</p>
-                <p className="text-white-100 font-bold">{profileData.college}</p>
+                
+                  {/* Education Details */}
+                  <div className="mt-2 text-white text-sm space-y-1">
+                    
+                    {profileData.college && (
+                      <p><span className="font-semibold">{profileData.type}:</span> {profileData.college}</p>
+                    )}
+                    {profileData.course === 'Other' && profileData.customCourse ? (
+                      <p><span className="font-semibold">Course:</span> {profileData.customCourse}</p>
+                    ) : profileData.course && (
+                      <p><span className="font-semibold">Course:</span> {profileData.course}</p>
+                    )}
+                    {profileData.branch && (
+                      <p><span className="font-semibold">Branch/Stream:</span> {profileData.branch}</p>
+                    )}
+                    {profileData.stream && !profileData.branch && (
+                      <p><span className="font-semibold">Branch/Stream:</span> {profileData.stream}</p>
+                    )}
+                  </div>
                 
                 <div className="flex flex-col sm:flex-row gap-4 items-center mt-4">
                   <button 
@@ -398,11 +417,29 @@ const ProfilePage = () => {
                 <div className="flex flex-col pt-4">
                   <h1 className="text-2xl font-bold">{profileData.displayName}</h1>
                   <p className="text-white font-bold">@{profileData.username}</p>
-                  <p className="text-white-100 font-bold">{profileData.college}</p>
-                  <div className="flex flex-row gap-4 justify-center items-center my-4">
+                 
+                    {/* Education Details */}
+                    <div className="mt-2 text-white text-sm space-y-1">
+                      
+                      {profileData.college && (
+                        <p><span className="font-semibold">{profileData.type}:</span> {profileData.college}</p>
+                      )}
+                      {profileData.course === 'Other' && profileData.customCourse ? (
+                        <p><span className="font-semibold">Course:</span> {profileData.customCourse}</p>
+                      ) : profileData.course && (
+                        <p><span className="font-semibold">Course:</span> {profileData.course}</p>
+                      )}
+                      {profileData.branch && (
+                        <p><span className="font-semibold">Branch/Stream:</span> {profileData.branch}</p>
+                      )}
+                      {profileData.stream && !profileData.branch && (
+                        <p><span className="font-semibold">Branch/Stream:</span> {profileData.stream}</p>
+                      )}
+                    </div>
+                  <div className="flex flex-row gap-4 justify-start items-center my-4">
                     <button 
                       onClick={handleContactClick}
-                      className="cursor-pointer bg-teal-600 hover:bg-teal-700 px-4 py-2 rounded-full text-sm font-medium transition-colors"
+                      className="cursor-pointer bg-teal-900 hover:bg-teal px-4 py-2 rounded-full text-sm font-medium transition-colors"
                     >
                       Contact
                     </button>
@@ -778,7 +815,23 @@ const ProfilePage = () => {
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 space-y-4">
+            
+          </div>
+        </div>
+      )}
+
+      <Footer />
+    </div>
+    {showContactModal && (
+      <div 
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30"
+        onClick={() => setShowContactModal(false)}
+      >
+        <div 
+          className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[80vh] overflow-y-auto transform transition-all duration-300 ease-out"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="p-6 space-y-4">
               <h4 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h4>
 
               {/* Email */}
@@ -991,12 +1044,10 @@ const ProfilePage = () => {
                 Close
               </button>
             </div>
-          </div>
         </div>
-      )}
-
-      <Footer />
-    </div>
+      </div>
+    )}
+  </div>
   );
 };
 
