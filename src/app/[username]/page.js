@@ -325,12 +325,15 @@ const ProfilePage = () => {
                     ) : profileData.course && (
                       <p><span className="font-semibold">Course:</span> {profileData.course}</p>
                     )}
-                    {profileData.branch && (
+                    {profileData.branch === 'Other' && profileData.customBranch ? (
+                      <p><span className="font-semibold">Branch/Stream:</span> {profileData.customBranch}</p>
+                    ) : profileData.branch ? (
                       <p><span className="font-semibold">Branch/Stream:</span> {profileData.branch}</p>
-                    )}
-                    {profileData.stream && !profileData.branch && (
+                    ) : profileData.stream === 'Other' && profileData.customStream ? (
+                      <p><span className="font-semibold">Branch/Stream:</span> {profileData.customStream}</p>
+                    ) : profileData.stream ? (
                       <p><span className="font-semibold">Branch/Stream:</span> {profileData.stream}</p>
-                    )}
+                    ) : null}
                   </div>
                 
                 <div className="flex flex-col sm:flex-row gap-4 items-center mt-4">
@@ -429,12 +432,15 @@ const ProfilePage = () => {
                       ) : profileData.course && (
                         <p><span className="font-semibold">Course:</span> {profileData.course}</p>
                       )}
-                      {profileData.branch && (
+                      {profileData.branch === 'Other' && profileData.customBranch ? (
+                        <p><span className="font-semibold">Branch/Stream:</span> {profileData.customBranch}</p>
+                      ) : profileData.branch ? (
                         <p><span className="font-semibold">Branch/Stream:</span> {profileData.branch}</p>
-                      )}
-                      {profileData.stream && !profileData.branch && (
+                      ) : profileData.stream === 'Other' && profileData.customStream ? (
+                        <p><span className="font-semibold">Branch/Stream:</span> {profileData.customStream}</p>
+                      ) : profileData.stream ? (
                         <p><span className="font-semibold">Branch/Stream:</span> {profileData.stream}</p>
-                      )}
+                      ) : null}
                     </div>
                   <div className="flex flex-row gap-4 justify-start items-center my-4">
                     <button 
