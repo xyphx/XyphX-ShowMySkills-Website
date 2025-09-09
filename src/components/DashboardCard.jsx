@@ -12,11 +12,15 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { generateProfileUrl, formatUsername } from "@/utils/profileUtils";
 
-export default function DashboardCard({ props, onStarToggle, isAuthenticated }) {
+export default function DashboardCard({
+  props,
+  onStarToggle,
+  isAuthenticated,
+}) {
   const router = useRouter();
   const { user } = useAuth();
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  
+
   const enterpage = () => {
     router.push(generateProfileUrl(props.username));
   };
@@ -26,7 +30,7 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
 
   const handleStarClick = (e) => {
     e.stopPropagation();
-    
+
     if (!isAuthenticated) {
       setShowLoginPrompt(true);
       // Auto-hide prompt after 3 seconds
@@ -37,7 +41,7 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
   };
 
   const handleLoginRedirect = () => {
-    router.push('/auth');
+    router.push("/auth");
   };
 
   return (
@@ -77,7 +81,7 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
                 {props.college}
               </p>
               <p className="text-gray-800 font-medium mb-2 text-sm">
-                {props.course ? props.course : props.customCourse}
+                {props.course === "Other" && props.customCourse ? props.customCourse : props.course}
               </p>
               <p className="text-gray-600 mb-4 text-sm">{props.location}</p>
             </div>
@@ -85,21 +89,19 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
             <div className="block sm:hidden">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 {props.name}
-              </h3><br></br>
+              </h3>
+              <br />
               <div className="text-sm text-gray-600 mb-4">
                 <span>{formatUsername(props.username)}</span>
-                <span className="mx-2 text-gray-400">•</span>
-                <br></br>
+                <br />
                 <span className="text-gray-800 font-medium">
                   {props.college}
                 </span>
-                <span className="mx-2 text-gray-400">•</span>
-                <br></br>
+                <br />
                 <span className="text-gray-800 font-medium">
-                  {props.course ? props.course : props.customCourse}
+                  {props.course === "Other" && props.customCourse ? props.customCourse : props.course}
                 </span>
-                <span className="mx-2 text-gray-400">•</span>
-                <br></br>
+                <br />
                 <span>{props.location}</span>
               </div>
             </div>
@@ -167,7 +169,9 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
           <button
             onClick={handleStarClick}
             className={`${
-              props.starred ? "bg-yellow-500 hover:bg-yellow-600" : "bg-teal-500 hover:bg-teal-600"
+              props.starred
+                ? "bg-yellow-500 hover:bg-yellow-600"
+                : "bg-teal-500 hover:bg-teal-600"
             } cursor-pointer text-white p-2 rounded-full transition-colors relative`}
           >
             {!isAuthenticated ? (
@@ -175,7 +179,9 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
             ) : (
               <Star
                 className={`w-4 h-4 cursor-pointer ${
-                  props.starred ? "fill-current text-yellow-200" : "fill-current text-white"
+                  props.starred
+                    ? "fill-current text-yellow-200"
+                    : "fill-current text-white"
                 }`}
               />
             )}
@@ -183,7 +189,11 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
 
           {/* Tooltip */}
           <span className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-1 text-xs text-black bg-teal-200 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 whitespace-nowrap">
-            {!isAuthenticated ? "Sign in to star" : props.starred ? "Unstar" : "Star Me !"}
+            {!isAuthenticated
+              ? "Sign in to star"
+              : props.starred
+              ? "Unstar"
+              : "Star Me !"}
           </span>
 
           {/* Login Prompt Modal */}
@@ -191,8 +201,12 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
             <div className="absolute top-full -left-52 md:-left-40 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50 w-64">
               <div className="text-center">
                 <LogIn className="w-8 h-8 text-teal-600 mx-auto mb-2" />
-                <h3 className="text-sm font-semibold text-gray-900 mb-1">Sign in required</h3>
-                <p className="text-xs text-gray-600 mb-3">You need to be signed in to star profiles</p>
+                <h3 className="text-sm font-semibold text-gray-900 mb-1">
+                  Sign in required
+                </h3>
+                <p className="text-xs text-gray-600 mb-3">
+                  You need to be signed in to star profiles
+                </p>
                 <button
                   onClick={handleLoginRedirect}
                   className="bg-teal-500 hover:bg-teal-600 text-white px-3 py-1 rounded-full text-xs font-medium transition-colors"
@@ -206,7 +220,6 @@ export default function DashboardCard({ props, onStarToggle, isAuthenticated }) 
       )}
 
       {/* "My Profile" indicator for own profile */}
-      
     </div>
   );
 }

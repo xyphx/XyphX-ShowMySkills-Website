@@ -6,20 +6,34 @@ import { usePathname } from "next/navigation";
 
 export default function ClientLayout({ children }) {
   const [showLoader, setShowLoader] = useState(true);
+  const [fadeOut, setFadeOut] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
     setShowLoader(true);
+    setFadeOut(false);
     const timer = setTimeout(() => {
-      setShowLoader(false);
-    }, 2000);
+      setFadeOut(true);
+      setTimeout(() => setShowLoader(false), 500); // 500ms fade duration
+    }, 4000);
     return () => clearTimeout(timer);
   }, [pathname]);
 
   return (
-    <>
-      {showLoader && <Loader />}
-      <AuthProvider>{children}</AuthProvider>
-    </>
+    <AuthProvider>
+      {children}
+      {showLoader && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9999,
+          pointerEvents: 'auto',
+          transition: 'opacity 0.5s',
+          opacity: fadeOut ? 0 : 1
+        }}>
+          <Loader />
+        </div>
+      )}
+    </AuthProvider>
   );
 }
