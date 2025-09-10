@@ -538,7 +538,7 @@ export default function ProfileSetup() {
 
       const profileData = {
         displayName: formData.displayName.trim(),
-        username: formData.username.trim(),
+        username: formData.username.trim().toLowerCase(),
         type: formData.type,
         college: formData.college.trim(),
         course: formData.course || formData.customCourse,
