@@ -58,7 +58,9 @@ export default function DashboardCard({
               alt={props.name}
               className="w-40 h-40 sm:rounded-tr-lg rounded-tl-lg rounded-br-lg rounded-bl-lg object-cover"
             />
-            <div className="absolute sm:-bottom-2 -bottom-0 left-0 right-0 w-40 sm:w-full">
+
+            {/* Star Count Below Image */}
+            <div className="w-40 sm:w-full mt-2">
               <div className="bg-teal-500 text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center justify-center space-x-1">
                 <Star className="w-3 h-3 sm:w-4 sm:h-4 fill-current" />
                 <span className="text-sm sm:text-lg font-bold">
@@ -81,7 +83,14 @@ export default function DashboardCard({
                 {props.college}
               </p>
               <p className="text-gray-800 font-medium mb-2 text-sm">
-                {props.course === "Other" && props.customCourse ? props.customCourse : props.course}
+                {props.branch === "Other" && props.customBranch
+                  ? props.customBranch
+                  : props.branch}
+              </p>
+              <p className="text-gray-800 font-medium mb-2 text-sm">
+                {props.stream === "Other" && props.customStream
+                  ? props.customStream
+                  : props.stream}
               </p>
               <p className="text-gray-600 mb-4 text-sm">{props.location}</p>
             </div>
@@ -99,7 +108,15 @@ export default function DashboardCard({
                 </span>
                 <br />
                 <span className="text-gray-800 font-medium">
-                  {props.course === "Other" && props.customCourse ? props.customCourse : props.course}
+                  {props.branch === "Other" && props.customBranch
+                    ? props.customBranch
+                    : props.branch}
+                </span>
+                <br />
+                <span className="text-gray-800 font-medium">
+                  {props.stream === "Other" && props.customStream
+                    ? props.customStream
+                    : props.stream}
                 </span>
                 <br />
                 <span>{props.location}</span>
