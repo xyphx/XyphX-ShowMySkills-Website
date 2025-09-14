@@ -22,7 +22,9 @@ function SkilloraProfile() {
   const [mounted, setMounted] = useState(false);
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [visibleCount, setVisibleCount] = useState(10); // For lazy loading
+  const [loadingMore, setLoadingMore] = useState(false);
+///hell
   const { user } = useAuth();
 
   const fetchProfiles = useCallback(async () => {
@@ -50,8 +52,8 @@ function SkilloraProfile() {
 
       querySnapshot.forEach((doc) => {
         const data = doc.data();
-        // Only show profiles that have completed setup
-        if (data.profileCompleted) {
+        // Only show profiles that have completed setup AND are public
+        if (data.profileCompleted && (data.isPublic !== false)) {
           fetchedProfiles.push({
             id: doc.id,
             name: data.displayName || 'Unknown User',
@@ -61,16 +63,18 @@ function SkilloraProfile() {
             stars: data.stars || 0,
             skills: data.skills || ['Web'],
             profileImage: data.profileImage || data.photoURL || '/common-profile.png',
-            peoplewhostarredme: data.peoplewhostarredme || [], // Array of user IDs who starred this profile
-            starredbyme: data.starredbyme || [], // Array of user IDs this user has starred
-            starred: user ? currentUserStarredByMe.includes(doc.id) : false, // Boolean for current user based on their starredbyme array
+            peoplewhostarredme: data.peoplewhostarredme || [],
+            starredbyme: data.starredbyme || [],
+            starred: user ? currentUserStarredByMe.includes(doc.id) : false,
             phone: data.phone || '',
             email: data.email || '',
             instagram: data.instagram || '',
             linkedin: data.linkedin || '',
             github: data.github || '',
-            course: data.course || '',
-            customCourse: data.customCourse || '',
+            branch: data.branch || '',
+            customBranch: data.customBranch || '',
+            stream: data.stream || '',
+            customStream: data.customStream || '',
           });
         }
       });
@@ -93,8 +97,11 @@ function SkilloraProfile() {
           instagram: '',
           linkedin: '',
           github: '',
-          course: '',
-          customCourse: '',
+          branch: '',
+          customBranch: '',
+          stream: '',
+          customStream: '',
+          isPublic: true,
         }
       ];
       
@@ -126,7 +133,7 @@ function SkilloraProfile() {
           instagram: '',
           linkedin: '',
           github: '',
-        
+          isPublic: true,
         }
       ];
       setProfiles(fallbackData);
@@ -196,9 +203,27 @@ function SkilloraProfile() {
 
   useEffect(() => {
     setMounted(true);
-    // Fetch profiles regardless of authentication status
     fetchProfiles();
-  }, [user, fetchProfiles]); // Re-fetch when user changes (login/logout)
+  }, [user, fetchProfiles]);
+
+  // Lazy loading: load more when reaching end of page
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
+        !loadingMore &&
+        visibleCount < filteredProfile.length
+      ) {
+        setLoadingMore(true);
+        setTimeout(() => {
+          setVisibleCount((prev) => Math.min(prev + 10, filteredProfile.length));
+          setLoadingMore(false);
+        }, 500); // Simulate loading delay
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loadingMore, visibleCount, profiles, searchQuery, selectedCategory]);
 
   //loading
   if (!mounted) {
@@ -220,9 +245,7 @@ function SkilloraProfile() {
     if (selectedCategory === "All Skills") {
       return true;
     }
-    // Get skills that belong to the selected category
     const categorySkills = getSkillsByCategory(selectedCategory);
-    // Check if the profile has any skills that match the category
     return profile.skills.some(skill => categorySkills.includes(skill));
   });
   //filter by search (now includes skills)
@@ -237,6 +260,8 @@ function SkilloraProfile() {
       profile.skills.some(skill => skill.toLowerCase().includes(searchLower))
     );
   });
+  // Only show up to visibleCount cards
+  const visibleProfiles = filteredProfile.slice(0, visibleCount);
 
   return (
     <div className="min-h-screen bg-gray-50  ">
@@ -319,16 +344,33 @@ function SkilloraProfile() {
                   </div>
                 </div>
               ))
-            ) : filteredProfile.length > 0 ? (
-              filteredProfile.map((profile, index) => (
-                <div key={profile.id || index} className="flex justify-center">
-                  <DashboardCard
-                    props={profile}
-                    onStarToggle={() => toggleStar(profile.id, profile.starred)}
-                    isAuthenticated={!!user}
-                  />
-                </div>
-              ))
+            ) : visibleProfiles.length > 0 ? (
+              <>
+                {visibleProfiles.map((profile, index) => (
+                  <div key={profile.id || index} className="flex justify-center">
+                    <DashboardCard
+                      props={profile}
+                      onStarToggle={() => toggleStar(profile.id, profile.starred)}
+                      isAuthenticated={!!user}
+                    />
+                  </div>
+                ))}
+                {loadingMore && (
+                  <div className="flex justify-center w-full py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+                  </div>
+                )}
+                {visibleCount < filteredProfile.length && !loadingMore && (
+                  <div className="flex justify-end w-full py-4">
+                    <button
+                      className="px-4 py-2 bg-emerald-500 text-white rounded-full shadow"
+                      onClick={() => setVisibleCount((prev) => Math.min(prev + 10, filteredProfile.length))}
+                    >
+                      Load More
+                    </button>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="col-span-full text-center py-12">
                 <p className="text-gray-500 text-lg">No profiles found matching your search.</p>

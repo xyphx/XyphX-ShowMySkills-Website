@@ -143,6 +143,7 @@ export const AuthProvider = ({ children }) => {
           profileCompleted: false,
           starredbyme: [], // Array of profile IDs this user has starred
           peoplewhostarredme: [], // Array of user IDs who starred this profile
+          isPublic: true, // Default to public profile
           ...additionalData // This will include username from signUp function
         });
       } catch (error) {
