@@ -27,8 +27,8 @@ const HomePage = () => {
           </button> */}
         </div>
         {/* Get Started Button */}
-        <button onClick={handleClick} className="cursor-pointer bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-full transition-colors">
-          Get Started
+        <button onClick={() => router.push('/auth')} className="cursor-pointer bg-teal-500 hover:bg-teal-600 text-white px-6 py-2 rounded-full transition-colors">
+            Signup
         </button>
       </nav>
   {/* Main Content */}
@@ -95,11 +95,12 @@ const HomePage = () => {
               </p>
               {/* CTA Button */}
               <div className="flex flex-row items-center justify-center gap-2 md:gap-4">
-                <button onClick={handleClick} className="cursor-pointer bg-teal-500 hover:bg-teal-600 text-white px-8  py-4 rounded-full text-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
-                  Get Started
+                
+                <button onClick={() => router.push('/learnmore')} className="cursor-pointer bg-[#FFF8F0]/80 text-black border  px-14 py-3 rounded-full text-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
+                  More
                 </button>
-                <button onClick={() => router.push('/learnmore')} className="cursor-pointer bg-[#FFF8F0]/80 text-black border-2  px-8 py-4 rounded-full text-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
-                  LearnMore
+                <button onClick={handleClick} className="cursor-pointer bg-teal-500 hover:bg-teal-600 text-white px-8  py-3 rounded-full text-lg font-semibold transition-all transform hover:scale-105 shadow-lg">
+                  Get Started
                 </button>
               </div>
             </div>

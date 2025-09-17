@@ -91,13 +91,13 @@ export default function Nav() {
         </div>
       )}
       
-      <header className="md:px-24 px-4 bg-white py-1 flex items-center justify-between relative">
+      <header className="md:px-24 px-4 e py-1 flex items-center justify-between relative">
         <div className="flex items-center space-x-4">
           <img 
             src="/Logo.jpg" 
             alt="ShowMySkills Logo" 
             className="h-16 w-auto object-contain cursor-pointer" 
-            onClick={() => router.push('/home')}
+            onClick={() => router.push('/resume-builder')}
           />
         </div>
 
@@ -130,7 +130,7 @@ export default function Nav() {
                   <span className="text-gray-800 font-medium text-sm sm:text-base hidden sm:inline">{displayData.name}</span>
                   <span className="text-gray-800 font-medium text-sm sm:hidden">Menu</span>
                   <div
-                    className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-center bg-cover border-2 border-emerald-500"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-center bg-cover border-2 border-emerald-500"
                     style={{ backgroundImage: `url(${displayData.profileImage})` }}
                   ></div>
                 </div>
@@ -139,7 +139,16 @@ export default function Nav() {
                 {dropdownOpen && (
                   <div className="absolute right-0 sm:right-8 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50 w-36 sm:w-40">
                     {/* Mobile navigation links */}
-                    <div className="md:hidden border-b border-gray-200">
+                    <div className="border-b border-gray-200">
+                      <button 
+                        onClick={() => {
+                          router.push('/resume-builder');
+                          setDropdownOpen(false);
+                        }}
+                        className="w-full cursor-pointer px-3 py-2 sm:px-4 sm:py-2 text-left text-gray-700 hover:bg-gray-100 text-sm sm:text-base"
+                      >
+                        Build Resume
+                      </button>
                       <button 
                         onClick={() => {
                           router.push('/home');
@@ -156,7 +165,7 @@ export default function Nav() {
                         }}
                         className="w-full cursor-pointer px-3 py-2 sm:px-4 sm:py-2 text-left text-gray-700 hover:bg-gray-100 text-sm sm:text-base"
                       >
-                        Learn More
+                        More
                       </button>
                     </div>
                     <button 
@@ -210,7 +219,7 @@ export default function Nav() {
                       }}
                       className="w-full cursor-pointer px-3 py-2 text-left text-gray-700 hover:bg-gray-100 text-sm"
                     >
-                      Learn More
+                     More
                     </button>
                   </div>
                 )}
