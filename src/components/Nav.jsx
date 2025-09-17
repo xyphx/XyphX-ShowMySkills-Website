@@ -91,7 +91,7 @@ export default function Nav() {
         </div>
       )}
       
-      <header className="md:px-24 px-4 bg-white py-1 flex items-center justify-between relative">
+      <header className="md:px-24 px-4 e py-1 flex items-center justify-between relative">
         <div className="flex items-center space-x-4">
           <img 
             src="/Logo.jpg" 
@@ -130,7 +130,7 @@ export default function Nav() {
                   <span className="text-gray-800 font-medium text-sm sm:text-base hidden sm:inline">{displayData.name}</span>
                   <span className="text-gray-800 font-medium text-sm sm:hidden">Menu</span>
                   <div
-                    className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-center bg-cover border-2 border-emerald-500"
+                    className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-center bg-cover border-2 border-emerald-500"
                     style={{ backgroundImage: `url(${displayData.profileImage})` }}
                   ></div>
                 </div>
