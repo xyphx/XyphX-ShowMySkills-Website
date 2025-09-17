@@ -8,6 +8,8 @@ import Nav from "@/components/Nav";
 import { useAuth } from "@/contexts/AuthContext";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/config/firebase";
+import { generateResumePDF } from "@/utils/generateResumePDF";
+import jsPDF from "jspdf";
 
 // Helper to fetch suggestions by username prefix
 async function getUsersByUsernamePrefix(prefix) {
@@ -30,6 +32,7 @@ export default function page() {
   const [selectedUser, setSelectedUser] = React.useState(null);
   const [error, setError] = React.useState("");
   const [inputChangedAfterSelect, setInputChangedAfterSelect] = React.useState(false);
+  const [generating, setGenerating] = React.useState(false);
 
   // Fetch suggestions as user types
   React.useEffect(() => {
@@ -63,13 +66,24 @@ export default function page() {
     setInputChangedAfterSelect(false);
   };
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!selectedUser) {
       setError("No user found");
       return;
     }
-    // Proceed with resume generation for selectedUser
-    // router.push(`/resume/${selectedUser.username}`); // Example navigation
+    setGenerating(true);
+    setError("");
+    try {
+      // Wait at least 3 seconds before downloading
+      const start = Date.now();
+      const doc = await generateResumePDF(selectedUser);
+      const elapsed = Date.now() - start;
+      await new Promise(res => setTimeout(res, Math.max(0, 3000 - elapsed)));
+      doc.save(`${selectedUser.displayName || selectedUser.username}_Resume.pdf`);
+    } catch (err) {
+      setError("Failed to generate PDF. Please try again.");
+    }
+    setGenerating(false);
   };
 
 
@@ -158,10 +172,11 @@ export default function page() {
                
                 {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
                 <button
-                  className="cursor-pointer bg-teal-500 hover:bg-teal-600 text-white px-8 py-3 rounded-full text-lg font-semibold transition-all transform hover:scale-105 shadow-lg"
+                  className="cursor-pointer bg-teal-500 hover:bg-teal-600 text-white px-8 py-3 rounded-full text-lg font-semibold transition-all transform hover:scale-105 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed"
                   onClick={handleGenerate}
+                  disabled={generating}
                 >
-                  Generate
+                  {generating ? "Generating..." : "Generate"}
                 </button>
               </div>
             </div>
