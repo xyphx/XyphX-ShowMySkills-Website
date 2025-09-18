@@ -51,9 +51,9 @@ export async function generateResumePDF(user) {
     doc.text("Education", 15, y);
     y += 6;
     doc.setFont("helvetica", "normal").setFontSize(11);
-    if (user.college) doc.text(`• ${user.college}`, 20, y), (y += 6);
     if (user.customCourse || user.course) doc.text(`• ${user.customCourse || user.course}`, 20, y), (y += 6);
     if (user.customBranch || user.branch) doc.text(`• ${user.customBranch || user.branch}`, 20, y), (y += 6);
+    if (user.college) doc.text(`• ${user.college}`, 20, y), (y += 6);
     y += 2;
     drawLine();
   }
@@ -111,7 +111,7 @@ export async function generateResumePDF(user) {
       }
       if (work.link) {
         doc.setTextColor(0, 0, 255);
-        doc.textWithLink("🔗 View Project", 25, y, { url: work.link });
+        doc.textWithLink(" View Project", 25, y, { url: work.link });
         doc.setTextColor(0, 0, 0);
         y += 8;
       }
