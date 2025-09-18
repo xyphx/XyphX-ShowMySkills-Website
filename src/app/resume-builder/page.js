@@ -1,4 +1,3 @@
-
 "use client";
 import React from "react";
 
@@ -23,7 +22,7 @@ async function getUsersByUsernamePrefix(prefix) {
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
-export default function page() {
+function Page() {
 
   const router = useRouter();
   const { getUserByUsername } = useAuth();
@@ -186,5 +185,7 @@ export default function page() {
     </div>
   );
 }
+
+export default Page;
 
 
