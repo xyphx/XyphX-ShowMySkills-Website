@@ -50,7 +50,7 @@ function Page() {
   }, [inputValue]);
 
   const handleInputChange = (e) => {
-    setInputValue(e.target.value);
+    setInputValue(e.target.value.toLowerCase());
     if (selectedUser) {
       setSelectedUser(null);
       setInputChangedAfterSelect(true);
