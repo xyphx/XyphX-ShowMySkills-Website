@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import {
   Star,
   Share2,
@@ -177,11 +178,14 @@ const ProfilePage = () => {
               
               {/* Profile Picture and Star - Centered */}
               <div className="flex flex-col items-center">
-                <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white">
-                  <img
+                <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white relative">
+                  <Image
                     src={profileData.profileImage || "https://via.placeholder.com/200x200?text=No+Image"}
-                    alt={profileData.displayName}
-                    className="w-full h-full object-cover"
+                    alt={profileData.displayName || "Profile Image"}
+                    fill
+                    className="object-cover"
+                    sizes="160px"
+                    priority
                   />
                 </div>
                 <div className="flex items-center gap-3 mt-4">
@@ -235,11 +239,14 @@ const ProfilePage = () => {
               <div className="flex flex-row ml-4 gap-8 items-start w-[70%]">
                 {/* Profile Picture and Star */}
                 <div className="flex flex-col items-center">
-                  <div className="w-50 h-50 rounded-full overflow-hidden border-4 border-white">
-                    <img
+                  <div className="w-50 h-50 rounded-full overflow-hidden border-4 border-white relative">
+                    <Image
                       src={profileData.profileImage || "https://via.placeholder.com/200x200?text=No+Image"}
-                      alt={profileData.displayName}
-                      className="w-full h-full object-cover"
+                      alt={profileData.displayName || "Profile Image"}
+                      fill
+                      className="object-cover"
+                      sizes="200px"
+                      priority
                     />
                   </div>
                   <div className="flex items-center gap-3 mt-4">

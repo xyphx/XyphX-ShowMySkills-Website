@@ -10,33 +10,52 @@ const monaSans = Mona_Sans({
 
 // Metadata export for app router
 export const metadata = {
-  title: "ShowMySkills | Create Your Portfolio & Get Discovered",
-  description: "ShowMySkills (Show My Skills) is a platform where creators, coders, designers, and doers showcase their skills, build portfolios, rank among the best, and get discovered by peers and professionals.",
-  keywords: "ShowMySkills, Show My Skills, showmyskills, show my skills, portfolio, showcase skills, coding, design, developers, creators, XyphX",
-  authors: [{ name: "ShowMySkills Team" }],
+  metadataBase: new URL("https://showmyskills.xyphx.com"),
+  title: {
+    default: "ShowMySkills | Showcase Your Talent & Build Your Portfolio",
+    template: "%s | ShowMySkills"
+  },
+  description: "ShowMySkills by XyphX is the ultimate platform for creators, developers, and designers to showcase their skills, build professional portfolios, and get discovered by the global community.",
+  keywords: ["ShowMySkills", "XyphX", "Show My Skills", "Portfolio Builder", "Skill Showcase", "Developer Portfolio", "Designer Portfolio", "Professional Profile", "Talent Discovery"],
+  authors: [{ name: "XyphX Team" }],
+  creator: "XyphX",
+  publisher: "XyphX",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   alternates: {
     canonical: "https://showmyskills.xyphx.com"
   },
   openGraph: {
     title: "ShowMySkills | Showcase Your Skills",
-    description: "Create your portfolio, showcase your talent, and get discovered. A platform built for creators, coders, and designers.",
+    description: "Build your professional portfolio and showcase your talent to the world. Join ShowMySkills by XyphX today.",
     type: "website",
     url: "https://showmyskills.xyphx.com",
+    siteName: "ShowMySkills",
+    locale: "en_US",
     images: [
       {
-        url: "https://showmyskills.xyphx.com/Logo.jpg",
+        url: "/Logo.jpg",
+        width: 1200,
+        height: 630,
+        alt: "ShowMySkills Logo",
       }
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "ShowMySkills | Showcase Your Skills",
-    description: "Showcase your skills, build your portfolio, and get discovered by professionals.",
-    images: ["https://showmyskills.xyphx.com/Logo.jpg"],
+    description: "Build your professional portfolio and showcase your talent to the world.",
+    creator: "@xyphx",
+    images: ["/Logo.jpg"],
   },
   icons: {
     icon: "/favicon.ico",
-  }
+    apple: "/apple-icon.png",
+  },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({ children }) {
