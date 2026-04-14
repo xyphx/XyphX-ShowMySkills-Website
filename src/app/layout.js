@@ -56,6 +56,17 @@ export const metadata = {
     apple: "/apple-icon.png",
   },
   manifest: "/manifest.json",
+  appleWebApp: {
+    title: "ShowMySkills",
+    statusBarStyle: "default",
+    capable: true,
+  },
+};
+
+export const viewport = {
+  themeColor: "#0d9488",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {

@@ -22,7 +22,9 @@ export default async function sitemap() {
   // Dynamic user profiles
   let userRoutes = [];
   try {
-    const querySnapshot = await getDocs(collection(db, 'users'));
+    // Only attempt to fetch if environment variables are present
+    if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+      const querySnapshot = await getDocs(collection(db, 'users'));
     userRoutes = querySnapshot.docs
       .map((doc) => {
         const data = doc.data();
@@ -37,6 +39,7 @@ export default async function sitemap() {
         return null;
       })
       .filter(Boolean);
+    }
   } catch (error) {
     console.error('Error generating sitemap for users:', error);
   }
